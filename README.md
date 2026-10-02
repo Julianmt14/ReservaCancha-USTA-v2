@@ -81,6 +81,7 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 
 ## Calidad (ISO/IEC 25010)
 
+- Pruebas del backend: `cd backend && mvn test` (autenticación, reservas, pagos y disponibilidad; ver [`backend/README.md`](backend/README.md)).
 - RNF-01 desempeño: `GET /api/disponibilidad` < 2,0 s (JMeter). 2,0 exacto = incumple.
 - SEC-01 seguridad: 0 accesos no autorizados. Colección Postman/Newman en [`tests/security`](tests/security/README.md)
   (sin token, token inválido, rol insuficiente, escalada de privilegios, recursos ajenos, webhook, exposición de datos).

@@ -2,6 +2,7 @@ package co.edu.usta.reservacancha.reserva;
 
 import co.edu.usta.reservacancha.user.Role;
 import co.edu.usta.reservacancha.user.Usuario;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,7 +26,7 @@ public class ReservaController {
   }
 
   @PostMapping
-  public Reserva crear(@AuthenticationPrincipal Usuario usuario, @RequestBody CrearReserva req) {
+  public Reserva crear(@AuthenticationPrincipal Usuario usuario, @Valid @RequestBody CrearReserva req) {
     return service.crear(usuario, req.canchaId(), req.fecha(), req.horaInicio(), req.horaFin());
   }
 

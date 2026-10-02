@@ -22,11 +22,11 @@ public class CanchaController {
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','PROPIETARIO')")
   public Cancha crear(@Valid @RequestBody Cancha c) { return repo.save(c); }
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','PROPIETARIO')")
   public Cancha actualizar(@PathVariable Long id, @Valid @RequestBody Cancha in) {
     Cancha c = repo.findById(id).orElseThrow();
     c.setNombre(in.getNombre());

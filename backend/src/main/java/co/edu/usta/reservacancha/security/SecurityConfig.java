@@ -1,8 +1,14 @@
 package co.edu.usta.reservacancha.security;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -27,14 +33,28 @@ public class SecurityConfig {
   SecurityFilterChain chain(HttpSecurity http) throws Exception {
     return http
         .csrf(csrf -> csrf.disable())
+        .cors(Customizer.withDefaults())
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(a -> a
             .requestMatchers("/api/auth/**", "/api/wompi/webhook", "/error").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/canchas/**", "/api/disponibilidad/**").permitAll()
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "PROPIETARIO")
             .anyRequest().authenticated())
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
+  }
+
+  /** Origenes del frontend permitidos (separados por coma). Por defecto, Next.js en desarrollo. */
+  @Bean
+  CorsConfigurationSource corsConfigurationSource(
+      @Value("${app.cors.origins:http://localhost:3000}") List<String> origins) {
+    CorsConfiguration cfg = new CorsConfiguration();
+    cfg.setAllowedOrigins(origins);
+    cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+    cfg.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/api/**", cfg);
+    return source;
   }
 
   @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }

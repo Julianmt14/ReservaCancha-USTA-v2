@@ -1,5 +1,6 @@
 package co.edu.usta.reservacancha.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+// Usuario viaja anidado en Reserva/Pago: nunca se serializan el hash ni los datos de UserDetails (SEC-01).
+@JsonIgnoreProperties({"password", "authorities", "username", "accountNonExpired",
+    "accountNonLocked", "credentialsNonExpired", "enabled"})
 @Entity
 @Table(name = "usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Usuario implements UserDetails {

@@ -1,9 +1,11 @@
 package co.edu.usta.reservacancha.reserva;
 
+import co.edu.usta.reservacancha.user.Role;
 import co.edu.usta.reservacancha.user.Usuario;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -47,6 +49,30 @@ public class ReservaController {
             "inicio", r.getHoraInicio().toString(),
             "fin", r.getHoraFin().toString(),
             "estado", r.getEstado().name()))
+        .toList();
+  }
+
+  /**
+   * Ocupacion de una cancha desde hoy. Los jugadores solo ven los bloques ocupados;
+   * administrador y propietario ven ademas quien reservo y los ultimos 30 dias.
+   */
+  @GetMapping("/cancha/{canchaId}")
+  public List<Map<String, Object>> porCancha(@PathVariable Long canchaId, @AuthenticationPrincipal Usuario usuario) {
+    boolean gestor = usuario.getRol() == Role.ADMIN || usuario.getRol() == Role.PROPIETARIO;
+    LocalDate desde = gestor ? LocalDate.now().minusDays(30) : LocalDate.now();
+    return repo.findByCanchaIdAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(canchaId, desde).stream()
+        .map(r -> {
+          Map<String, Object> m = new LinkedHashMap<>();
+          m.put("id", r.getId());
+          m.put("canchaId", canchaId);
+          m.put("fecha", r.getFecha().toString());
+          m.put("horaInicio", r.getHoraInicio().toString());
+          m.put("horaFin", r.getHoraFin().toString());
+          m.put("estado", r.getEstado().name());
+          m.put("usuarioId", r.getUsuario().getId());
+          if (gestor) m.put("jugador", r.getUsuario().getNombre());
+          return m;
+        })
         .toList();
   }
 

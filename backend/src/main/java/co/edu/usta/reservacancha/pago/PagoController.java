@@ -1,6 +1,9 @@
 package co.edu.usta.reservacancha.pago;
 
+import co.edu.usta.reservacancha.user.Usuario;
+import java.util.List;
 import java.util.Map;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -8,20 +11,24 @@ import org.springframework.web.bind.annotation.*;
 public class PagoController {
 
   private final WompiService wompi;
-  private final PagoRepository pagos;
 
-  public PagoController(WompiService wompi, PagoRepository pagos) {
+  public PagoController(WompiService wompi) {
     this.wompi = wompi;
-    this.pagos = pagos;
   }
 
   @PostMapping("/iniciar/{reservaId}")
-  public Map<String, Object> iniciar(@PathVariable Long reservaId) {
-    return wompi.iniciarPago(reservaId);
+  public Map<String, Object> iniciar(@PathVariable Long reservaId, @AuthenticationPrincipal Usuario usuario) {
+    return wompi.iniciarPago(reservaId, usuario);
   }
 
   @GetMapping("/reserva/{reservaId}")
-  public java.util.List<Pago> porReserva(@PathVariable Long reservaId) {
-    return pagos.findByReservaId(reservaId);
+  public List<Pago> porReserva(@PathVariable Long reservaId, @AuthenticationPrincipal Usuario usuario) {
+    return wompi.porReserva(reservaId, usuario);
+  }
+
+  @PostMapping("/confirmar/{reservaId}")
+  public Pago confirmar(@PathVariable Long reservaId, @RequestParam String transactionId,
+      @AuthenticationPrincipal Usuario usuario) {
+    return wompi.confirmar(reservaId, transactionId, usuario);
   }
 }

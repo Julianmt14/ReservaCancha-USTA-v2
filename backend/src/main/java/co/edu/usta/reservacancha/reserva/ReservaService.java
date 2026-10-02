@@ -4,6 +4,7 @@ import co.edu.usta.reservacancha.cancha.Cancha;
 import co.edu.usta.reservacancha.cancha.CanchaRepository;
 import co.edu.usta.reservacancha.horario.Horario;
 import co.edu.usta.reservacancha.horario.HorarioRepository;
+import co.edu.usta.reservacancha.user.Role;
 import co.edu.usta.reservacancha.user.Usuario;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
@@ -68,7 +69,7 @@ public class ReservaService {
     Reserva r = reservas.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no existe"));
     boolean dueño = r.getUsuario().getId().equals(quien.getId());
-    boolean admin = quien.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    boolean admin = quien.getRol() == Role.ADMIN || quien.getRol() == Role.PROPIETARIO;
     if (!dueño && !admin) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sin permiso");
     r.setEstado(EstadoReserva.CANCELADA);
     return reservas.save(r);

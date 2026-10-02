@@ -10,6 +10,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
   List<Reserva> findByUsuarioId(Long usuarioId);
   List<Reserva> findByCanchaIdAndFecha(Long canchaId, LocalDate fecha);
+  List<Reserva> findByCanchaIdAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(Long canchaId, LocalDate desde);
 
   // Conflicto de horarios: (inicio < finExistente) AND (fin > inicioExistente)
   @Query("""

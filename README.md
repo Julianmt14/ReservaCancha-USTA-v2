@@ -8,14 +8,16 @@ Centralizar la gestión de reservas y pagos de canchas deportivas (Acta de Proye
 
 **Alcance v1.0:** usuarios y roles · canchas y horarios · disponibilidad · crear/consultar reservas · Wompi **sandbox** · consultas admin.
 **Excluye:** app móvil nativa, facturación DIAN, PayPal/Stripe, torneos, SMS, QR.
+La pantalla de torneos del frontend es solo la interfaz, sin API ni datos: queda fuera de la v1.0.
 
 ## Estructura
 
 ```
-ReservaCancha-Colombia/
-  docs/     Acta-Proyecto-ReservaCancha-Colombia.pdf
-  backend/  Spring Boot 3.3 + Java 21 + JPA + Security/JWT + Postgres/H2 + Wompi sandbox  (puerto 8080)
-  frontend/ Next.js 16 + React 19 + Tailwind (puerto 3000) — `lib/api.ts` consume el backend
+ReservaCancha-USTA/
+  docs/      Acta-Proyecto-ReservaCancha-Colombia.pdf
+  backend/   Spring Boot 3.3 + Java 21 + JPA + Security/JWT + Postgres/H2 + Wompi sandbox  (puerto 8080)
+  frontend/  Next.js 16 + React 19 + Tailwind 4 (puerto 3000) — ver frontend/README.md
+  tests/     Pruebas de seguridad SEC-01 (Postman/Newman)
   docker-compose.yml  Postgres 16 para dev
 ```
 
@@ -27,9 +29,8 @@ docker compose up -d db
 
 # 2) Backend
 cd backend
-# con Maven instalado:
 mvn spring-boot:run
-# o con variables Postgres:
+# o con Postgres:
 SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/reservacancha SPRING_DATASOURCE_USERNAME=rc SPRING_DATASOURCE_PASSWORD=rc123 SPRING_DATASOURCE_DRIVER=org.postgresql.Driver mvn spring-boot:run
 
 # 3) Frontend
@@ -39,47 +40,47 @@ npm install
 npm run dev
 ```
 
-Admin seed: `admin@reservacancha.co` / `admin123`.
+Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
+
+## Variables de entorno del backend
+
+| Variable | Por defecto | Nota |
+|---|---|---|
+| `JWT_SECRET` | secreto de desarrollo | **obligatorio cambiarlo en cualquier despliegue** (Base64, 256 bits o más) |
+| `CORS_ORIGINS` | `http://localhost:3000` | orígenes del frontend, separados por coma |
+| `WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `WOMPI_INTEGRITY_SECRET` | placeholders sandbox | llaves del comercio en Wompi |
+| `WOMPI_EVENTS_SECRET` | `test_events_XXXX` | secreto compartido que debe enviar el webhook en `X-Webhook-Secret` |
 
 ## API (backend)
 
-| Método | Ruta | Auth | Descripción |
+| Método | Ruta | Acceso | Descripción |
 |---|---|---|---|
-| POST | `/api/auth/register` | no | registro (rol default JUGADOR) |
-| POST | `/api/auth/login` | no | login → JWT |
-| GET | `/api/canchas` | no | listar activas |
-| POST | `/api/canchas` | ADMIN | crear |
-| GET | `/api/horarios/cancha/{id}` | no | horarios |
-| POST | `/api/horarios` | ADMIN | crear horario |
-| GET | `/api/disponibilidad?canchaId=&fecha=` | no | ocupadas + libres 06:00-22:00 (RNF-01 < 2,0 s) |
-| POST | `/api/reservas` | JWT | crear (valida traslape → 409) |
+| POST | `/api/auth/register` | público | registro (`JUGADOR` o `PROPIETARIO`; `ADMIN` se rechaza) |
+| POST | `/api/auth/login` | público | login → JWT |
+| GET | `/api/canchas` | público | listar activas |
+| POST / PUT | `/api/canchas` | ADMIN, PROPIETARIO | crear / editar (la baja es `activa=false`) |
+| GET | `/api/horarios/cancha/{id}` | JWT | horarios activos de la cancha |
+| POST / PUT / DELETE | `/api/horarios` | ADMIN, PROPIETARIO | crear / editar / dar de baja |
+| GET | `/api/disponibilidad?canchaId=&fecha=` | público | ocupadas + libres 06:00-22:00 (RNF-01 < 2,0 s) |
+| POST | `/api/reservas` | JWT | crear (valida horario y traslape → 409) |
 | GET | `/api/reservas/mias` | JWT | mis reservas |
-| POST | `/api/reservas/{id}/cancelar` | JWT dueño/ADMIN | cancelar |
-| POST | `/api/pagos/iniciar/{reservaId}` | JWT | firma Wompi sandbox |
-| POST | `/api/wompi/webhook` | no | webhook sandbox |
-| GET | `/api/admin/resumen` | ADMIN | conteos |
+| GET | `/api/reservas/cancha/{id}` | JWT | ocupación desde hoy; el personal ve además quién reservó |
+| POST | `/api/reservas/{id}/cancelar` | dueño, ADMIN, PROPIETARIO | cancelar |
+| POST | `/api/pagos/iniciar/{reservaId}` | dueño, ADMIN, PROPIETARIO | referencia y firma de integridad Wompi |
+| POST | `/api/pagos/confirmar/{reservaId}?transactionId=` | dueño, ADMIN, PROPIETARIO | confirma consultando la transacción a Wompi |
+| GET | `/api/pagos/reserva/{reservaId}` | dueño, ADMIN, PROPIETARIO | pagos de la reserva |
+| POST | `/api/wompi/webhook` | secreto compartido | evento de Wompi |
+| GET | `/api/admin/resumen`, `/reservas`, `/pagos` | ADMIN, PROPIETARIO | consultas administrativas |
 
 ## Wompi sandbox (10 flujos antes de semana 15)
 
 1. Crear reserva → `POST /api/reservas`.
-2. `POST /api/pagos/iniciar/{id}` → `{referencia, valorCentavos, firmaIntegridad}`.
-3. Widget checkout con `NEXT_PUBLIC_WOMPI_PUBLIC_KEY`.
-4. Webhook confirma → reserva `PAGADA`.
+2. `POST /api/pagos/iniciar/{id}` → `{referencia, valorCentavos, firmaIntegridad, llavePublica}`.
+3. Widget de checkout de Wompi en el frontend.
+4. `POST /api/pagos/confirmar/{id}?transactionId=...` verifica la transacción con Wompi → reserva `PAGADA`.
 
 ## Calidad (ISO/IEC 25010)
 
 - RNF-01 desempeño: `GET /api/disponibilidad` < 2,0 s (JMeter). 2,0 exacto = incumple.
-- SEC-01 seguridad: 0 accesos no autorizados (Postman/Newman: sin token, token inválido, rol insuficiente).
-
-## Subir a GitHub
-
-```bash
-cd ReservaCancha-Colombia
-git init -b main
-git add .
-git commit -m "v1.0 base: Spring Boot + Next.js + acta"
-gh repo create ReservaCancha-Colombia --private --source=. --push
-# o manual: crear repo en github.com y:
-git remote add origin https://github.com/<usuario>/ReservaCancha-Colombia.git
-git push -u origin main
-```
+- SEC-01 seguridad: 0 accesos no autorizados. Colección Postman/Newman en [`tests/security`](tests/security/README.md)
+  (sin token, token inválido, rol insuficiente, escalada de privilegios, recursos ajenos, webhook, exposición de datos).

@@ -85,3 +85,17 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 - RNF-01 desempeño: `GET /api/disponibilidad` < 2,0 s (JMeter). 2,0 exacto = incumple.
 - SEC-01 seguridad: 0 accesos no autorizados. Colección Postman/Newman en [`tests/security`](tests/security/README.md)
   (sin token, token inválido, rol insuficiente, escalada de privilegios, recursos ajenos, webhook, exposición de datos).
+
+## Ramas
+
+| Rama | Uso |
+|---|---|
+| `main` | Versión estable y entregable; recibe `dev` al cerrar un sprint |
+| `dev` | Integración de lo ya revisado durante el sprint |
+| `julian` | Trabajo de Julián Mejía: backend, seguridad, JWT y Wompi |
+| `miguel` | Trabajo de Miguel Franco: frontend, pruebas y despliegue |
+
+Cada integrante trabaja en su rama y abre un *pull request* hacia `dev`, que revisa el otro integrante
+(definición de terminado en el acta). Al cerrar el sprint, `dev` se integra en `main`.
+Los commits siguen Conventional Commits (`tipo(alcance): descripción`).
+

@@ -32,6 +32,9 @@ public class ReservaService {
   @Transactional
   public Reserva crear(Usuario usuario, Long canchaId, LocalDate fecha, LocalTime inicio, LocalTime fin) {
     if (!fin.isAfter(inicio)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "horaFin debe ser mayor a horaInicio");
+    if (fecha.isBefore(LocalDate.now()) || (fecha.isEqual(LocalDate.now()) && !inicio.isAfter(LocalTime.now()))) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede reservar en un horario que ya paso");
+    }
     Cancha cancha = canchas.findById(canchaId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cancha no existe"));
     if (!cancha.isActiva()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cancha inactiva");

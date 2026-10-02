@@ -9,8 +9,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import co.edu.usta.reservacancha.user.UsuarioRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -59,7 +62,15 @@ public class SecurityConfig {
 
   @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
-  @Bean AuthenticationManager authenticationManager(AuthenticationConfiguration c) throws Exception {
-    return c.getAuthenticationManager();
+  /**
+   * Gestor de autenticacion propio: pedirselo a AuthenticationConfiguration cuando ya existe un
+   * bean AuthenticationManager lo hace delegar en si mismo y desborda la pila al iniciar sesion.
+   */
+  @Bean AuthenticationManager authenticationManager(UsuarioRepository usuarios, PasswordEncoder encoder) {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setUserDetailsService(email -> usuarios.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException(email)));
+    provider.setPasswordEncoder(encoder);
+    return new ProviderManager(provider);
   }
 }

@@ -13,11 +13,13 @@ interface Props {
 }
 
 export default function PagosStats({ rows, loading }: Props) {
-  const approved  = rows.filter(r => r.paymentStatus === 'APPROVED')
-  const pending   = rows.filter(r => r.paymentStatus === 'PENDING')
-  const declined  = rows.filter(r => r.paymentStatus === 'DECLINED' || r.paymentStatus === 'ERROR' || r.paymentStatus === 'VOIDED')
+  const approved = rows.filter((r) => r.paymentStatus === 'APPROVED')
+  const pending = rows.filter((r) => r.paymentStatus === 'PENDING')
+  const declined = rows.filter(
+    (r) => r.paymentStatus === 'DECLINED' || r.paymentStatus === 'ERROR' || r.paymentStatus === 'VOIDED'
+  )
 
-  const totalCobrado  = approved.reduce((s, r) => s + r.amountInCents, 0)
+  const totalCobrado = approved.reduce((s, r) => s + r.amountInCents, 0)
   const totalPendiente = pending.reduce((s, r) => s + r.amountInCents, 0)
 
   const sk = loading ? '—' : undefined

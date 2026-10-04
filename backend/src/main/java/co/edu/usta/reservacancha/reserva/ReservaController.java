@@ -26,7 +26,8 @@ public class ReservaController {
   }
 
   @PostMapping
-  public Reserva crear(@AuthenticationPrincipal Usuario usuario, @Valid @RequestBody CrearReserva req) {
+  public Reserva crear(
+      @AuthenticationPrincipal Usuario usuario, @Valid @RequestBody CrearReserva req) {
     return service.crear(usuario, req.canchaId(), req.fecha(), req.horaInicio(), req.horaFin());
   }
 
@@ -46,34 +47,40 @@ public class ReservaController {
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
     return repo.findByCanchaIdAndFecha(canchaId, fecha).stream()
         .filter(r -> r.getEstado() != EstadoReserva.CANCELADA)
-        .map(r -> Map.<String, Object>of(
-            "inicio", r.getHoraInicio().toString(),
-            "fin", r.getHoraFin().toString(),
-            "estado", r.getEstado().name()))
+        .map(
+            r ->
+                Map.<String, Object>of(
+                    "inicio", r.getHoraInicio().toString(),
+                    "fin", r.getHoraFin().toString(),
+                    "estado", r.getEstado().name()))
         .toList();
   }
 
   /**
-   * Ocupacion de una cancha desde hoy. Los jugadores solo ven los bloques ocupados;
-   * administrador y propietario ven ademas quien reservo y los ultimos 30 dias.
+   * Ocupacion de una cancha desde hoy. Los jugadores solo ven los bloques ocupados; administrador y
+   * propietario ven ademas quien reservo y los ultimos 30 dias.
    */
   @GetMapping("/cancha/{canchaId}")
-  public List<Map<String, Object>> porCancha(@PathVariable Long canchaId, @AuthenticationPrincipal Usuario usuario) {
+  public List<Map<String, Object>> porCancha(
+      @PathVariable Long canchaId, @AuthenticationPrincipal Usuario usuario) {
     boolean gestor = usuario.getRol() == Role.ADMIN || usuario.getRol() == Role.PROPIETARIO;
     LocalDate desde = gestor ? LocalDate.now().minusDays(30) : LocalDate.now();
-    return repo.findByCanchaIdAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(canchaId, desde).stream()
-        .map(r -> {
-          Map<String, Object> m = new LinkedHashMap<>();
-          m.put("id", r.getId());
-          m.put("canchaId", canchaId);
-          m.put("fecha", r.getFecha().toString());
-          m.put("horaInicio", r.getHoraInicio().toString());
-          m.put("horaFin", r.getHoraFin().toString());
-          m.put("estado", r.getEstado().name());
-          m.put("usuarioId", r.getUsuario().getId());
-          if (gestor) m.put("jugador", r.getUsuario().getNombre());
-          return m;
-        })
+    return repo
+        .findByCanchaIdAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(canchaId, desde)
+        .stream()
+        .map(
+            r -> {
+              Map<String, Object> m = new LinkedHashMap<>();
+              m.put("id", r.getId());
+              m.put("canchaId", canchaId);
+              m.put("fecha", r.getFecha().toString());
+              m.put("horaInicio", r.getHoraInicio().toString());
+              m.put("horaFin", r.getHoraFin().toString());
+              m.put("estado", r.getEstado().name());
+              m.put("usuarioId", r.getUsuario().getId());
+              if (gestor) m.put("jugador", r.getUsuario().getNombre());
+              return m;
+            })
         .toList();
   }
 

@@ -23,37 +23,54 @@ public class ReservaService {
   private final CanchaRepository canchas;
   private final HorarioRepository horarios;
 
-  public ReservaService(ReservaRepository reservas, CanchaRepository canchas, HorarioRepository horarios) {
+  public ReservaService(
+      ReservaRepository reservas, CanchaRepository canchas, HorarioRepository horarios) {
     this.reservas = reservas;
     this.canchas = canchas;
     this.horarios = horarios;
   }
 
   @Transactional
-  public Reserva crear(Usuario usuario, Long canchaId, LocalDate fecha, LocalTime inicio, LocalTime fin) {
-    if (!fin.isAfter(inicio)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "horaFin debe ser mayor a horaInicio");
-    if (fecha.isBefore(LocalDate.now()) || (fecha.isEqual(LocalDate.now()) && !inicio.isAfter(LocalTime.now()))) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede reservar en un horario que ya paso");
+  public Reserva crear(
+      Usuario usuario, Long canchaId, LocalDate fecha, LocalTime inicio, LocalTime fin) {
+    if (!fin.isAfter(inicio))
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "horaFin debe ser mayor a horaInicio");
+    if (fecha.isBefore(LocalDate.now())
+        || (fecha.isEqual(LocalDate.now()) && !inicio.isAfter(LocalTime.now()))) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "No se puede reservar en un horario que ya paso");
     }
-    Cancha cancha = canchas.findById(canchaId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cancha no existe"));
-    if (!cancha.isActiva()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cancha inactiva");
+    Cancha cancha =
+        canchas
+            .findById(canchaId)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cancha no existe"));
+    if (!cancha.isActiva())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cancha inactiva");
 
     // Validar dentro del horario del día (evita reservas fuera de operación)
-    List<Horario> delDia = horarios.findByCanchaIdAndDiaSemanaAndActivoTrue(canchaId, fecha.getDayOfWeek());
-    boolean dentro = delDia.stream().anyMatch(h ->
-        !inicio.isBefore(h.getHoraApertura()) && !fin.isAfter(h.getHoraCierre()));
+    List<Horario> delDia =
+        horarios.findByCanchaIdAndDiaSemanaAndActivoTrue(canchaId, fecha.getDayOfWeek());
+    boolean dentro =
+        delDia.stream()
+            .anyMatch(
+                h -> !inicio.isBefore(h.getHoraApertura()) && !fin.isAfter(h.getHoraCierre()));
     if (!delDia.isEmpty() && !dentro) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fuera del horario de operación de la cancha");
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Fuera del horario de operación de la cancha");
     }
 
     // Conflicto de horarios (trazabilidad: nunca doble reserva)
     if (reservas.existeTraslape(canchaId, fecha, inicio, fin)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Conflicto de horario: ya existe una reserva en ese rango");
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT, "Conflicto de horario: ya existe una reserva en ese rango");
     }
 
     long minutos = Duration.between(inicio, fin).toMinutes();
-    BigDecimal horas = BigDecimal.valueOf(minutos).divide(BigDecimal.valueOf(60), 2, java.math.RoundingMode.HALF_UP);
+    BigDecimal horas =
+        BigDecimal.valueOf(minutos)
+            .divide(BigDecimal.valueOf(60), 2, java.math.RoundingMode.HALF_UP);
     BigDecimal total = cancha.getPrecioHora().multiply(horas);
 
     Reserva r = new Reserva();
@@ -69,8 +86,11 @@ public class ReservaService {
 
   @Transactional
   public Reserva cancelar(Long id, Usuario quien) {
-    Reserva r = reservas.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no existe"));
+    Reserva r =
+        reservas
+            .findById(id)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no existe"));
     boolean dueño = r.getUsuario().getId().equals(quien.getId());
     boolean admin = quien.getRol() == Role.ADMIN || quien.getRol() == Role.PROPIETARIO;
     if (!dueño && !admin) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sin permiso");

@@ -86,6 +86,8 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 - SEC-01 seguridad: 0 accesos no autorizados. Colección Postman/Newman en [`tests/security`](tests/security/README.md)
   (sin token, token inválido, rol insuficiente, escalada de privilegios, recursos ajenos, webhook, exposición de datos).
 
+Los acuerdos de estilo, commits, revisión y definiciones de listo y de terminado están en [`ESTANDARES.md`](ESTANDARES.md).
+
 ## Ramas
 
 | Rama | Uso |

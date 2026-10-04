@@ -35,7 +35,9 @@ export default function TorneoCard({ torneo }: { torneo: Torneo }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[15px] font-bold" style={{ color: 'var(--text)' }}>{torneo.name}</span>
+            <span className="text-[15px] font-bold" style={{ color: 'var(--text)' }}>
+              {torneo.name}
+            </span>
             <TorneoStatusBadge status={torneo.status} />
           </div>
           <div className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
@@ -50,17 +52,31 @@ export default function TorneoCard({ torneo }: { torneo: Torneo }) {
         style={{ background: 'var(--bg-2)' }}
       >
         <div>
-          <div className="text-[10px] uppercase tracking-wide mb-0.5" style={{ color: 'var(--text-3)' }}>Inicio</div>
-          <div className="font-mono font-semibold" style={{ color: 'var(--text)' }}>{formatDate(torneo.startDate)}</div>
+          <div className="text-[10px] uppercase tracking-wide mb-0.5" style={{ color: 'var(--text-3)' }}>
+            Inicio
+          </div>
+          <div className="font-mono font-semibold" style={{ color: 'var(--text)' }}>
+            {formatDate(torneo.startDate)}
+          </div>
         </div>
-        <div className="text-[10px]" style={{ color: 'var(--line-2)' }}>→</div>
-        <div className="text-right">
-          <div className="text-[10px] uppercase tracking-wide mb-0.5" style={{ color: 'var(--text-3)' }}>Fin</div>
-          <div className="font-mono font-semibold" style={{ color: 'var(--text)' }}>{formatDate(torneo.endDate)}</div>
+        <div className="text-[10px]" style={{ color: 'var(--line-2)' }}>
+          →
         </div>
         <div className="text-right">
-          <div className="text-[10px] uppercase tracking-wide mb-0.5" style={{ color: 'var(--text-3)' }}>Inscripción</div>
-          <div className="font-mono font-semibold" style={{ color: 'var(--green)' }}>{fmt(torneo.pricePerTeam)}</div>
+          <div className="text-[10px] uppercase tracking-wide mb-0.5" style={{ color: 'var(--text-3)' }}>
+            Fin
+          </div>
+          <div className="font-mono font-semibold" style={{ color: 'var(--text)' }}>
+            {formatDate(torneo.endDate)}
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="text-[10px] uppercase tracking-wide mb-0.5" style={{ color: 'var(--text-3)' }}>
+            Inscripción
+          </div>
+          <div className="font-mono font-semibold" style={{ color: 'var(--green)' }}>
+            {fmt(torneo.pricePerTeam)}
+          </div>
         </div>
       </div>
 
@@ -83,13 +99,21 @@ export default function TorneoCard({ torneo }: { torneo: Torneo }) {
       {/* Footer */}
       <div className="flex items-center justify-between pt-1" style={{ borderTop: '1px solid var(--line)' }}>
         <div>
-          <div className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-3)' }}>Ingresos</div>
-          <div className="text-[13px] font-bold font-mono" style={{ color: 'var(--green)' }}>{fmt(torneo.totalRevenue)}</div>
+          <div className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-3)' }}>
+            Ingresos
+          </div>
+          <div className="text-[13px] font-bold font-mono" style={{ color: 'var(--green)' }}>
+            {fmt(torneo.totalRevenue)}
+          </div>
         </div>
         {torneo.champion && (
           <div className="text-right">
-            <div className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-3)' }}>Campeón</div>
-            <div className="text-xs font-semibold" style={{ color: 'var(--amber)' }}>🏆 {torneo.champion}</div>
+            <div className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-3)' }}>
+              Campeón
+            </div>
+            <div className="text-xs font-semibold" style={{ color: 'var(--amber)' }}>
+              🏆 {torneo.champion}
+            </div>
           </div>
         )}
       </div>

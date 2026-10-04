@@ -32,8 +32,8 @@ export interface ScheduleResponse {
   id: number
   courtId: number
   dayOfWeek: DayOfWeek
-  openingTime: string   // "HH:mm"
-  closingTime: string   // "HH:mm"
+  openingTime: string // "HH:mm"
+  closingTime: string // "HH:mm"
   active: boolean
 }
 
@@ -191,7 +191,11 @@ export async function createSchedule(courtId: number, data: ScheduleRequest): Pr
   return toSchedule(created)
 }
 
-export async function updateSchedule(courtId: number, scheduleId: number, data: ScheduleRequest): Promise<ScheduleResponse> {
+export async function updateSchedule(
+  courtId: number,
+  scheduleId: number,
+  data: ScheduleRequest
+): Promise<ScheduleResponse> {
   const updated = await apiFetch<HorarioDto>(`/api/horarios/${scheduleId}`, {
     method: 'PUT',
     body: JSON.stringify(toHorarioBody(courtId, data)),

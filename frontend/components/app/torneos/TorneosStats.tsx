@@ -8,10 +8,10 @@ function fmt(n: number) {
 }
 
 export default function TorneosStats({ torneos }: { torneos: Torneo[] }) {
-  const activos       = torneos.filter(t => t.status === 'activo').length
-  const totalRevenue  = torneos.reduce((s, t) => s + t.totalRevenue, 0)
+  const activos = torneos.filter((t) => t.status === 'activo').length
+  const totalRevenue = torneos.reduce((s, t) => s + t.totalRevenue, 0)
   const totalPartidos = torneos.reduce((s, t) => s + t.matchesPlayed, 0)
-  const totalEquipos  = torneos.filter(t => t.status === 'activo').reduce((s, t) => s + t.registeredTeams, 0)
+  const totalEquipos = torneos.filter((t) => t.status === 'activo').reduce((s, t) => s + t.registeredTeams, 0)
 
   const stats: StatItem[] = [
     {

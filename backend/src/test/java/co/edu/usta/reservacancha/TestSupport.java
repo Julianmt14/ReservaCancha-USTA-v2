@@ -23,17 +23,29 @@ public final class TestSupport {
 
   /** Registra un jugador nuevo y devuelve su token JWT. */
   public static String registrarJugador(MockMvc mvc, ObjectMapper json) throws Exception {
-    String body = json.writeValueAsString(Map.of("nombre", "Jugador Prueba", "email", correoUnico(), "password", CLAVE));
-    String res = mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(body))
-        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+    String body =
+        json.writeValueAsString(
+            Map.of("nombre", "Jugador Prueba", "email", correoUnico(), "password", CLAVE));
+    String res =
+        mvc.perform(
+                post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(body))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
     return json.readTree(res).get("token").asText();
   }
 
   /** Inicia sesion con el administrador semilla y devuelve su token JWT. */
   public static String loginAdmin(MockMvc mvc, ObjectMapper json) throws Exception {
-    String body = json.writeValueAsString(Map.of("email", "admin@reservacancha.co", "password", "admin123"));
-    String res = mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(body))
-        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+    String body =
+        json.writeValueAsString(Map.of("email", "admin@reservacancha.co", "password", "admin123"));
+    String res =
+        mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(body))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
     JsonNode n = json.readTree(res);
     return n.get("token").asText();
   }

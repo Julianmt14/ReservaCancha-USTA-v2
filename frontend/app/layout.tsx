@@ -28,7 +28,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${plusJakarta.variable} ${jetbrainsMono.variable} h-full`}>
       <body className="h-full">
-        <AuthProvider><BusinessProvider><ModalProvider>{children}</ModalProvider></BusinessProvider></AuthProvider>
+        <AuthProvider>
+          <BusinessProvider>
+            <ModalProvider>{children}</ModalProvider>
+          </BusinessProvider>
+        </AuthProvider>
       </body>
     </html>
   )

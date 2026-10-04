@@ -1,9 +1,9 @@
 import type { ReservationStatus } from '@/lib/types/dashboard'
 
 const config: Record<ReservationStatus, { label: string; color: string; bg: string }> = {
-  confirmed: { label: 'Confirmada', color: 'var(--green)',  bg: 'var(--green-soft)' },
-  pending:   { label: 'Pendiente',  color: 'var(--amber)',  bg: 'var(--amber-soft)' },
-  canceled:  { label: 'Cancelada',  color: 'var(--red)',    bg: 'var(--red-soft)'   },
+  confirmed: { label: 'Confirmada', color: 'var(--green)', bg: 'var(--green-soft)' },
+  pending: { label: 'Pendiente', color: 'var(--amber)', bg: 'var(--amber-soft)' },
+  canceled: { label: 'Cancelada', color: 'var(--red)', bg: 'var(--red-soft)' },
 }
 
 export default function ReservaStatusBadge({ status }: { status: ReservationStatus }) {

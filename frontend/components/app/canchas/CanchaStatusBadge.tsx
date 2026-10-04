@@ -1,9 +1,9 @@
 import type { CanchaStatus } from '@/lib/types/canchas'
 
 const config: Record<CanchaStatus, { label: string; color: string; bg: string }> = {
-  activa:        { label: 'Activa',        color: 'var(--green)', bg: 'var(--green-soft)' },
+  activa: { label: 'Activa', color: 'var(--green)', bg: 'var(--green-soft)' },
   mantenimiento: { label: 'Mantenimiento', color: 'var(--amber)', bg: 'var(--amber-soft)' },
-  inactiva:      { label: 'Inactiva',      color: 'var(--red)',   bg: 'var(--red-soft)'   },
+  inactiva: { label: 'Inactiva', color: 'var(--red)', bg: 'var(--red-soft)' },
 }
 
 export default function CanchaStatusBadge({ status }: { status: CanchaStatus }) {

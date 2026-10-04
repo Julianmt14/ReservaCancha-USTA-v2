@@ -4,11 +4,11 @@ import type { PagosFilter } from './PagosView'
 import { IconSearch } from '@/components/app/icons'
 
 const TABS: { value: PagosFilter; label: string }[] = [
-  { value: 'all',      label: 'Todos' },
+  { value: 'all', label: 'Todos' },
   { value: 'APPROVED', label: 'Aprobados' },
-  { value: 'PENDING',  label: 'Pendientes' },
+  { value: 'PENDING', label: 'Pendientes' },
   { value: 'DECLINED', label: 'Rechazados' },
-  { value: 'ERROR',    label: 'Error' },
+  { value: 'ERROR', label: 'Error' },
 ]
 
 interface Props {
@@ -22,7 +22,7 @@ export default function PagosFilters({ search, onSearch, filter, onFilter }: Pro
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-1 rounded-lg p-1" style={{ background: 'var(--bg-2)' }}>
-        {TABS.map(tab => (
+        {TABS.map((tab) => (
           <button
             key={tab.value}
             onClick={() => onFilter(tab.value)}
@@ -44,7 +44,7 @@ export default function PagosFilters({ search, onSearch, filter, onFilter }: Pro
         <IconSearch />
         <input
           value={search}
-          onChange={e => onSearch(e.target.value)}
+          onChange={(e) => onSearch(e.target.value)}
           placeholder="Buscar jugador, código o cancha…"
           className="bg-transparent outline-none w-52 text-xs placeholder:text-[var(--text-3)]"
           style={{ color: 'var(--text)' }}

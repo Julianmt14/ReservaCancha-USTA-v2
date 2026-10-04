@@ -3,8 +3,8 @@
 import type { CourtResponse } from '@/lib/api/courts'
 
 const SPORT_LABEL: Record<string, string> = {
-  FUTBOL:   'Fútbol',
-  PADEL:    'Pádel',
+  FUTBOL: 'Fútbol',
+  PADEL: 'Pádel',
   VOLEIBOL: 'Voleibol',
 }
 
@@ -29,7 +29,10 @@ export default function CourtCard({ court, onClick, onReserve }: Props) {
         cursor: onClick ? 'pointer' : 'default',
       }}
     >
-      <div className="h-[6px] w-full" style={{ background: 'linear-gradient(90deg, var(--green), var(--green-deep))' }} />
+      <div
+        className="h-[6px] w-full"
+        style={{ background: 'linear-gradient(90deg, var(--green), var(--green-deep))' }}
+      />
 
       <div className="flex flex-col gap-3 p-5">
         {/* Name + sport + price */}
@@ -54,9 +57,18 @@ export default function CourtCard({ court, onClick, onReserve }: Props) {
 
         {/* Address */}
         <div className="flex items-center gap-1.5 text-[12.5px]" style={{ color: 'var(--text-3)' }}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
           </svg>
           {court.address}
         </div>
@@ -70,7 +82,10 @@ export default function CourtCard({ court, onClick, onReserve }: Props) {
 
         {/* Status */}
         <div className="flex items-center gap-1.5 pt-1 mt-auto">
-          <span className="size-2 rounded-full" style={{ background: court.active ? 'var(--green)' : 'var(--red)' }} />
+          <span
+            className="size-2 rounded-full"
+            style={{ background: court.active ? 'var(--green)' : 'var(--red)' }}
+          />
           <span className="text-[11.5px]" style={{ color: 'var(--text-3)' }}>
             {court.active ? 'Disponible' : 'No disponible'}
           </span>
@@ -78,12 +93,19 @@ export default function CourtCard({ court, onClick, onReserve }: Props) {
 
         {onReserve && (
           <button
-            onClick={e => { e.stopPropagation(); onReserve() }}
+            onClick={(e) => {
+              e.stopPropagation()
+              onReserve()
+            }}
             disabled={!court.active}
             className="w-full rounded-lg py-2 text-[13px] font-semibold transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             style={{ background: 'var(--green)', color: '#fff' }}
-            onMouseEnter={e => { if (court.active) e.currentTarget.style.background = 'var(--green-deep)' }}
-            onMouseLeave={e => { if (court.active) e.currentTarget.style.background = 'var(--green)' }}
+            onMouseEnter={(e) => {
+              if (court.active) e.currentTarget.style.background = 'var(--green-deep)'
+            }}
+            onMouseLeave={(e) => {
+              if (court.active) e.currentTarget.style.background = 'var(--green)'
+            }}
           >
             Reservar
           </button>

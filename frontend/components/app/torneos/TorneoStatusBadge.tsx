@@ -1,9 +1,9 @@
 import type { TorneoStatus } from '@/lib/types/torneos'
 
 const config: Record<TorneoStatus, { label: string; color: string; bg: string }> = {
-  'activo':          { label: 'Activo',          color: 'var(--green)', bg: 'var(--green-soft)' },
-  'en-preparacion':  { label: 'En preparación',  color: 'var(--amber)', bg: 'var(--amber-soft)' },
-  'finalizado':      { label: 'Finalizado',       color: 'var(--text-3)', bg: 'var(--bg-2)'     },
+  activo: { label: 'Activo', color: 'var(--green)', bg: 'var(--green-soft)' },
+  'en-preparacion': { label: 'En preparación', color: 'var(--amber)', bg: 'var(--amber-soft)' },
+  finalizado: { label: 'Finalizado', color: 'var(--text-3)', bg: 'var(--bg-2)' },
 }
 
 export default function TorneoStatusBadge({ status }: { status: TorneoStatus }) {

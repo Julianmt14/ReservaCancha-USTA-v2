@@ -16,9 +16,10 @@ export default function TorneosView({ torneos }: Props) {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase()
-    return torneos.filter(t => {
+    return torneos.filter((t) => {
       if (filter !== 'all' && t.status !== filter) return false
-      if (q && !t.name.toLowerCase().includes(q) && !t.courts.join(' ').toLowerCase().includes(q)) return false
+      if (q && !t.name.toLowerCase().includes(q) && !t.courts.join(' ').toLowerCase().includes(q))
+        return false
       return true
     })
   }, [torneos, filter, search])
@@ -29,8 +30,10 @@ export default function TorneosView({ torneos }: Props) {
 
       <div className="flex flex-col gap-4">
         <TorneosFilters
-          search={search} onSearch={v => setSearch(v)}
-          filter={filter} onFilter={v => setFilter(v)}
+          search={search}
+          onSearch={(v) => setSearch(v)}
+          filter={filter}
+          onFilter={(v) => setFilter(v)}
         />
 
         {filtered.length === 0 ? (
@@ -42,7 +45,9 @@ export default function TorneosView({ torneos }: Props) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.map(t => <TorneoCard key={t.id} torneo={t} />)}
+            {filtered.map((t) => (
+              <TorneoCard key={t.id} torneo={t} />
+            ))}
           </div>
         )}
       </div>

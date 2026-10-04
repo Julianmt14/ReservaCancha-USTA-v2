@@ -9,7 +9,7 @@ import type { ReservationStatus } from '@/lib/types/dashboard'
 
 const STATUS_MAP: Record<BookingResponse['status'], ReservationStatus> = {
   CONFIRMED: 'confirmed',
-  PENDING:   'pending',
+  PENDING: 'pending',
   CANCELLED: 'canceled',
   COMPLETED: 'confirmed',
 }
@@ -21,22 +21,22 @@ function formatDate(iso: string) {
 
 function formatTime(iso: string) {
   const d = new Date(iso)
-  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
 type Filter = 'all' | 'confirmed' | 'pending' | 'canceled'
 
 const FILTER_TABS: { value: Filter; label: string }[] = [
-  { value: 'all',       label: 'Todas' },
+  { value: 'all', label: 'Todas' },
   { value: 'confirmed', label: 'Confirmadas' },
-  { value: 'pending',   label: 'Pendientes' },
-  { value: 'canceled',  label: 'Canceladas' },
+  { value: 'pending', label: 'Pendientes' },
+  { value: 'canceled', label: 'Canceladas' },
 ]
 
 export default function MisReservasView() {
   const [bookings, setBookings] = useState<BookingResponse[]>([])
-  const [loading, setLoading]   = useState(true)
-  const [filter, setFilter]     = useState<Filter>('all')
+  const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState<Filter>('all')
   const [canceling, setCanceling] = useState<number | null>(null)
   const [detailBooking, setDetailBooking] = useState<BookingResponse | null>(null)
   const [detailCourt, setDetailCourt] = useState<CourtResponse | null>(null)
@@ -45,21 +45,21 @@ export default function MisReservasView() {
 
   useEffect(() => {
     getMyBookings(0, 100)
-      .then(p => setBookings(p.content))
+      .then((p) => setBookings(p.content))
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
   const filtered = useMemo(() => {
     if (filter === 'all') return bookings
-    return bookings.filter(b => STATUS_MAP[b.status] === filter)
+    return bookings.filter((b) => STATUS_MAP[b.status] === filter)
   }, [bookings, filter])
 
   async function handleCancel(id: number) {
     setCanceling(id)
     try {
       const updated = await cancelBooking(id)
-      setBookings(prev => prev.map(b => b.id === id ? updated : b))
+      setBookings((prev) => prev.map((b) => (b.id === id ? updated : b)))
     } catch {
       // silently ignore
     } finally {
@@ -69,10 +69,9 @@ export default function MisReservasView() {
 
   return (
     <div className="flex flex-col gap-4">
-
       {/* Tabs */}
       <div className="flex items-center gap-1 p-1 rounded-lg w-fit" style={{ background: 'var(--bg-2)' }}>
-        {FILTER_TABS.map(tab => (
+        {FILTER_TABS.map((tab) => (
           <button
             key={tab.value}
             onClick={() => setFilter(tab.value)}
@@ -93,7 +92,7 @@ export default function MisReservasView() {
           <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: 'var(--bg-2)', borderBottom: '1px solid var(--line)' }}>
-                {['Cancha', 'Fecha', 'Horario', 'Código', 'Estado', ''].map(h => (
+                {['Cancha', 'Fecha', 'Horario', 'Código', 'Estado', ''].map((h) => (
                   <th
                     key={h}
                     className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]"
@@ -107,17 +106,30 @@ export default function MisReservasView() {
             <tbody>
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i} style={{ background: i % 2 === 0 ? 'var(--panel)' : 'var(--panel-2)', borderBottom: '1px solid var(--line)' }}>
+                  <tr
+                    key={i}
+                    style={{
+                      background: i % 2 === 0 ? 'var(--panel)' : 'var(--panel-2)',
+                      borderBottom: '1px solid var(--line)',
+                    }}
+                  >
                     {Array.from({ length: 6 }).map((_, j) => (
                       <td key={j} className="px-4 py-3">
-                        <div className="h-3 rounded animate-pulse" style={{ background: 'var(--line-2)', width: j === 5 ? '60px' : '80%' }} />
+                        <div
+                          className="h-3 rounded animate-pulse"
+                          style={{ background: 'var(--line-2)', width: j === 5 ? '60px' : '80%' }}
+                        />
                       </td>
                     ))}
                   </tr>
                 ))
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-12 text-center text-xs" style={{ color: 'var(--text-3)' }}>
+                  <td
+                    colSpan={6}
+                    className="px-4 py-12 text-center text-xs"
+                    style={{ color: 'var(--text-3)' }}
+                  >
                     {filter === 'all' ? 'Aún no tienes reservas.' : 'No hay reservas en esta categoría.'}
                   </td>
                 </tr>
@@ -140,7 +152,10 @@ export default function MisReservasView() {
                         setDetailBooking(b)
                         setCourtLoading(true)
                         getCourt(b.courtId)
-                          .then(court => { courtCache.set(court.id, court); setDetailCourt(court) })
+                          .then((court) => {
+                            courtCache.set(court.id, court)
+                            setDetailCourt(court)
+                          })
                           .catch(() => setDetailCourt(null))
                           .finally(() => setCourtLoading(false))
                       }}
@@ -149,16 +164,23 @@ export default function MisReservasView() {
                         borderBottom: '1px solid var(--line)',
                         cursor: 'pointer',
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--panel-2)')}
-                      onMouseLeave={e => (e.currentTarget.style.background = i % 2 === 0 ? 'var(--panel)' : 'var(--panel-2)')}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--panel-2)')}
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = i % 2 === 0 ? 'var(--panel)' : 'var(--panel-2)')
+                      }
                     >
                       <td className="px-4 py-3">
-                        <div className="text-xs font-medium" style={{ color: 'var(--text)' }}>{b.courtName}</div>
+                        <div className="text-xs font-medium" style={{ color: 'var(--text)' }}>
+                          {b.courtName}
+                        </div>
                       </td>
                       <td className="px-4 py-3 font-mono text-xs" style={{ color: 'var(--text-2)' }}>
                         {formatDate(b.startAt)}
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs whitespace-nowrap" style={{ color: 'var(--text)' }}>
+                      <td
+                        className="px-4 py-3 font-mono text-xs whitespace-nowrap"
+                        style={{ color: 'var(--text)' }}
+                      >
                         {formatTime(b.startAt)}–{formatTime(b.endAt)}
                       </td>
                       <td className="px-4 py-3 font-mono text-xs" style={{ color: 'var(--text-3)' }}>
@@ -170,7 +192,10 @@ export default function MisReservasView() {
                       <td className="px-4 py-3">
                         {canCancel && (
                           <button
-                            onClick={e => { e.stopPropagation(); handleCancel(b.id) }}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleCancel(b.id)
+                            }}
                             disabled={canceling === b.id}
                             className="text-[11px] font-medium px-2.5 py-1 rounded-md transition-colors cursor-pointer disabled:opacity-40"
                             style={{ color: 'var(--red)', background: 'var(--red-soft)' }}
@@ -189,7 +214,10 @@ export default function MisReservasView() {
       </div>
       <BookingDetailModal
         open={detailBooking !== null}
-        onClose={() => { setDetailBooking(null); setDetailCourt(null) }}
+        onClose={() => {
+          setDetailBooking(null)
+          setDetailCourt(null)
+        }}
         booking={detailBooking}
         pricePerHour={detailCourt?.pricePerHour}
         ownerName={detailCourt?.businessName}

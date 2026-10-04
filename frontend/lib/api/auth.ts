@@ -64,12 +64,15 @@ export function saveSession(auth: AuthResponse): void {
   // Cookie `token`: la envia apiFetch como Bearer y la lee el middleware de Next.js para proteger rutas
   document.cookie = `token=${auth.token}; path=/; max-age=${MAX_AGE(auth.expiresInMs)}; SameSite=Lax`
   // Perfil en localStorage (sin el token)
-  localStorage.setItem('user', JSON.stringify({
-    userId: auth.userId,
-    email: auth.email,
-    fullName: auth.fullName,
-    role: auth.role,
-  }))
+  localStorage.setItem(
+    'user',
+    JSON.stringify({
+      userId: auth.userId,
+      email: auth.email,
+      fullName: auth.fullName,
+      role: auth.role,
+    })
+  )
 }
 
 export function clearSession(): void {

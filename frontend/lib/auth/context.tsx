@@ -30,12 +30,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  const login = useCallback(async (data: LoginRequest) => {
-    const auth = await apiLogin(data)
-    saveSession(auth)
-    setUser(auth)
-    router.push('/')
-  }, [router])
+  const login = useCallback(
+    async (data: LoginRequest) => {
+      const auth = await apiLogin(data)
+      saveSession(auth)
+      setUser(auth)
+      router.push('/')
+    },
+    [router]
+  )
 
   const logout = useCallback(() => {
     clearSession()
@@ -43,11 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push('/login')
   }, [router])
 
-  return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, isLoading, login, logout }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth(): AuthContextValue {

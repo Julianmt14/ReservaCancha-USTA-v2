@@ -30,10 +30,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: 'var(--bg)' }}
-    >
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'var(--bg)' }}>
       <div
         className="w-full max-w-sm rounded-2xl p-8"
         style={{ background: 'var(--panel)', border: '1px solid var(--line)' }}
@@ -64,11 +61,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="email"
-              className="text-xs font-medium"
-              style={{ color: 'var(--text-2)' }}
-            >
+            <label htmlFor="email" className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>
               Correo electrónico
             </label>
             <input
@@ -77,7 +70,7 @@ export default function LoginPage() {
               autoComplete="email"
               required
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
               style={{
                 background: 'var(--bg-2)',
@@ -85,18 +78,14 @@ export default function LoginPage() {
                 color: 'var(--text)',
                 fontFamily: 'var(--font-sans)',
               }}
-              onFocus={e => (e.currentTarget.style.borderColor = 'var(--green)')}
-              onBlur={e => (e.currentTarget.style.borderColor = 'var(--line)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--green)')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--line)')}
               placeholder="tu@email.com"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="password"
-              className="text-xs font-medium"
-              style={{ color: 'var(--text-2)' }}
-            >
+            <label htmlFor="password" className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>
               Contraseña
             </label>
             <input
@@ -105,7 +94,7 @@ export default function LoginPage() {
               autoComplete="current-password"
               required
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
               style={{
                 background: 'var(--bg-2)',
@@ -113,8 +102,8 @@ export default function LoginPage() {
                 color: 'var(--text)',
                 fontFamily: 'var(--font-sans)',
               }}
-              onFocus={e => (e.currentTarget.style.borderColor = 'var(--green)')}
-              onBlur={e => (e.currentTarget.style.borderColor = 'var(--line)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--green)')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--line)')}
               placeholder="••••••••"
             />
           </div>
@@ -138,10 +127,10 @@ export default function LoginPage() {
               fontFamily: 'var(--font-sans)',
               cursor: loading ? 'not-allowed' : 'pointer',
             }}
-            onMouseEnter={e => {
+            onMouseEnter={(e) => {
               if (!loading) e.currentTarget.style.background = 'var(--green-deep)'
             }}
-            onMouseLeave={e => {
+            onMouseLeave={(e) => {
               if (!loading) e.currentTarget.style.background = 'var(--green)'
             }}
           >
@@ -157,8 +146,8 @@ export default function LoginPage() {
               color: 'var(--text-2)',
               fontFamily: 'var(--font-sans)',
             }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--line-2)')}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--line)')}
+            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--line-2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--line)')}
           >
             Crear cuenta
           </Link>

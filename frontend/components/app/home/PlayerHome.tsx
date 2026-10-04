@@ -10,7 +10,11 @@ function groupByBusiness(courts: CourtResponse[]): Venue[] {
   const map = new Map<number, Venue>()
   for (const court of courts) {
     if (!map.has(court.businessId)) {
-      map.set(court.businessId, { businessId: court.businessId, businessName: court.businessName, courts: [] })
+      map.set(court.businessId, {
+        businessId: court.businessId,
+        businessName: court.businessName,
+        courts: [],
+      })
     }
     map.get(court.businessId)!.courts.push(court)
   }
@@ -19,9 +23,9 @@ function groupByBusiness(courts: CourtResponse[]): Venue[] {
 
 export default function PlayerHome() {
   const { user } = useAuth()
-  const [venues, setVenues]     = useState<Venue[]>([])
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(false)
+  const [venues, setVenues] = useState<Venue[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [selected, setSelected] = useState<Venue | null>(null)
   const [initialCourtId, setInitialCourtId] = useState<number | null>(null)
 
@@ -36,7 +40,7 @@ export default function PlayerHome() {
       sessionStorage.removeItem('openCourtId')
     }
     getCourts(0, 100)
-      .then(page => {
+      .then((page) => {
         const vs = groupByBusiness(page.content)
         setVenues(vs)
         if (stored) {
@@ -53,7 +57,10 @@ export default function PlayerHome() {
     return (
       <VenueDetail
         venue={selected}
-        onBack={() => { setSelected(null); setInitialCourtId(null) }}
+        onBack={() => {
+          setSelected(null)
+          setInitialCourtId(null)
+        }}
         initialCourtId={initialCourtId}
       />
     )
@@ -61,11 +68,13 @@ export default function PlayerHome() {
 
   return (
     <div className="flex flex-col gap-6 p-7">
-
       <div>
         <h1 className="text-[26px] font-bold tracking-[-0.03em]" style={{ color: 'var(--text)' }}>
           {greeting},{' '}
-          <em className="not-italic font-normal" style={{ fontFamily: 'Instrument Serif, serif', letterSpacing: '-0.01em', color: 'var(--green)' }}>
+          <em
+            className="not-italic font-normal"
+            style={{ fontFamily: 'Instrument Serif, serif', letterSpacing: '-0.01em', color: 'var(--green)' }}
+          >
             {firstName}
           </em>
         </h1>
@@ -77,7 +86,11 @@ export default function PlayerHome() {
       {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-[180px] rounded-2xl animate-pulse" style={{ background: 'var(--panel)' }} />
+            <div
+              key={i}
+              className="h-[180px] rounded-2xl animate-pulse"
+              style={{ background: 'var(--panel)' }}
+            />
           ))}
         </div>
       )}
@@ -93,19 +106,38 @@ export default function PlayerHome() {
 
       {!loading && !error && venues.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--text-3)' }}>
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ color: 'var(--text-3)' }}
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
-          <p className="text-sm" style={{ color: 'var(--text-3)' }}>No hay complejos disponibles por el momento.</p>
+          <p className="text-sm" style={{ color: 'var(--text-3)' }}>
+            No hay complejos disponibles por el momento.
+          </p>
         </div>
       )}
 
       {!loading && !error && venues.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {venues.map(v => (
-            <VenueCard key={v.businessId} venue={v} onClick={() => { setSelected(v); setInitialCourtId(null) }} />
+          {venues.map((v) => (
+            <VenueCard
+              key={v.businessId}
+              venue={v}
+              onClick={() => {
+                setSelected(v)
+                setInitialCourtId(null)
+              }}
+            />
           ))}
         </div>
       )}

@@ -7,13 +7,13 @@ import Modal from '@/components/app/ui/Modal'
 import { FormField, Input, Select, SubmitRow } from '@/components/app/ui/FormField'
 
 const DAYS: { value: ScheduleRequest['dayOfWeek']; label: string }[] = [
-  { value: 'MONDAY',    label: 'Lunes' },
-  { value: 'TUESDAY',   label: 'Martes' },
+  { value: 'MONDAY', label: 'Lunes' },
+  { value: 'TUESDAY', label: 'Martes' },
   { value: 'WEDNESDAY', label: 'Miércoles' },
-  { value: 'THURSDAY',  label: 'Jueves' },
-  { value: 'FRIDAY',    label: 'Viernes' },
-  { value: 'SATURDAY',  label: 'Sábado' },
-  { value: 'SUNDAY',    label: 'Domingo' },
+  { value: 'THURSDAY', label: 'Jueves' },
+  { value: 'FRIDAY', label: 'Viernes' },
+  { value: 'SATURDAY', label: 'Sábado' },
+  { value: 'SUNDAY', label: 'Domingo' },
 ]
 
 interface Props {
@@ -25,14 +25,16 @@ interface Props {
 }
 
 export default function ScheduleModal({ open, onClose, courtId, existing, onSaved }: Props) {
-  const usedDays = new Set(existing.map(s => s.dayOfWeek))
-  const availableDays = DAYS.filter(d => !usedDays.has(d.value))
+  const usedDays = new Set(existing.map((s) => s.dayOfWeek))
+  const availableDays = DAYS.filter((d) => !usedDays.has(d.value))
 
-  const [dayOfWeek, setDayOfWeek]     = useState<ScheduleRequest['dayOfWeek']>(availableDays[0]?.value ?? 'MONDAY')
+  const [dayOfWeek, setDayOfWeek] = useState<ScheduleRequest['dayOfWeek']>(
+    availableDays[0]?.value ?? 'MONDAY'
+  )
   const [openingTime, setOpeningTime] = useState('08:00')
   const [closingTime, setClosingTime] = useState('22:00')
-  const [error, setError]             = useState('')
-  const [saving, setSaving]           = useState(false)
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
 
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -82,11 +84,13 @@ export default function ScheduleModal({ open, onClose, courtId, existing, onSave
           <FormField label="Día de la semana">
             <Select
               value={dayOfWeek}
-              onChange={e => setDayOfWeek(e.target.value as ScheduleRequest['dayOfWeek'])}
+              onChange={(e) => setDayOfWeek(e.target.value as ScheduleRequest['dayOfWeek'])}
               required
             >
-              {availableDays.map(d => (
-                <option key={d.value} value={d.value}>{d.label}</option>
+              {availableDays.map((d) => (
+                <option key={d.value} value={d.value}>
+                  {d.label}
+                </option>
               ))}
             </Select>
           </FormField>
@@ -96,7 +100,7 @@ export default function ScheduleModal({ open, onClose, courtId, existing, onSave
               <Input
                 type="time"
                 value={openingTime}
-                onChange={e => setOpeningTime(e.target.value)}
+                onChange={(e) => setOpeningTime(e.target.value)}
                 required
               />
             </FormField>
@@ -104,14 +108,17 @@ export default function ScheduleModal({ open, onClose, courtId, existing, onSave
               <Input
                 type="time"
                 value={closingTime}
-                onChange={e => setClosingTime(e.target.value)}
+                onChange={(e) => setClosingTime(e.target.value)}
                 required
               />
             </FormField>
           </div>
 
           {error && (
-            <p className="text-[12.5px] rounded-lg px-3 py-2" style={{ background: 'var(--red-soft)', color: 'var(--red)' }}>
+            <p
+              className="text-[12.5px] rounded-lg px-3 py-2"
+              style={{ background: 'var(--red-soft)', color: 'var(--red)' }}
+            >
               {error}
             </p>
           )}

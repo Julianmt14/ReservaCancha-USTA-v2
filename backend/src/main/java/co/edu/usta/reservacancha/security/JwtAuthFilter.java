@@ -26,7 +26,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   }
 
   @Override
-  protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+  protected void doFilterInternal(
+      HttpServletRequest req, HttpServletResponse res, FilterChain chain)
       throws ServletException, IOException {
     String h = req.getHeader("Authorization");
     if (h != null && h.startsWith("Bearer ")) {
@@ -34,12 +35,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       try {
         String email = jwt.username(token);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-          UserDetailsService uds = username -> usuarios.findByEmail(username)
-              .orElseThrow(() -> new UsernameNotFoundException(username));
+          UserDetailsService uds =
+              username ->
+                  usuarios
+                      .findByEmail(username)
+                      .orElseThrow(() -> new UsernameNotFoundException(username));
           UserDetails u = uds.loadUserByUsername(email);
           if (jwt.valid(token, u)) {
-            SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(u, null, u.getAuthorities()));
+            SecurityContextHolder.getContext()
+                .setAuthentication(
+                    new UsernamePasswordAuthenticationToken(u, null, u.getAuthorities()));
           }
         }
       } catch (Exception ignored) {

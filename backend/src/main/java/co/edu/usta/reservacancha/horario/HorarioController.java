@@ -32,16 +32,21 @@ public class HorarioController {
   @PreAuthorize("hasAnyRole('ADMIN','PROPIETARIO')")
   public Horario crear(@Valid @RequestBody HorarioRequest in) {
     Horario h = new Horario();
-    h.setCancha(canchas.findById(in.canchaId())
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cancha no existe")));
+    h.setCancha(
+        canchas
+            .findById(in.canchaId())
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cancha no existe")));
     return guardar(h, in);
   }
 
   @PutMapping("/{id}")
   @PreAuthorize("hasAnyRole('ADMIN','PROPIETARIO')")
   public Horario actualizar(@PathVariable Long id, @Valid @RequestBody HorarioRequest in) {
-    Horario h = repo.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no existe"));
+    Horario h =
+        repo.findById(id)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no existe"));
     return guardar(h, in);
   }
 
@@ -49,15 +54,18 @@ public class HorarioController {
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAnyRole('ADMIN','PROPIETARIO')")
   public void eliminar(@PathVariable Long id) {
-    Horario h = repo.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no existe"));
+    Horario h =
+        repo.findById(id)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no existe"));
     h.setActivo(false);
     repo.save(h);
   }
 
   private Horario guardar(Horario h, HorarioRequest in) {
     if (!in.horaCierre().isAfter(in.horaApertura())) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "horaCierre debe ser mayor a horaApertura");
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "horaCierre debe ser mayor a horaApertura");
     }
     h.setDiaSemana(in.diaSemana());
     h.setHoraApertura(in.horaApertura());

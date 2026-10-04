@@ -11,19 +11,29 @@ public class CanchaController {
 
   private final CanchaRepository repo;
 
-  public CanchaController(CanchaRepository repo) { this.repo = repo; }
+  public CanchaController(CanchaRepository repo) {
+    this.repo = repo;
+  }
 
   @GetMapping
-  public List<Cancha> listar() { return repo.findByActivaTrue(); }
+  public List<Cancha> listar() {
+    return repo.findByActivaTrue();
+  }
 
   @GetMapping("/{id}")
   public Cancha una(@PathVariable Long id) {
-    return repo.findById(id).orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND));
+    return repo.findById(id)
+        .orElseThrow(
+            () ->
+                new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.NOT_FOUND));
   }
 
   @PostMapping
   @PreAuthorize("hasAnyRole('ADMIN','PROPIETARIO')")
-  public Cancha crear(@Valid @RequestBody Cancha c) { return repo.save(c); }
+  public Cancha crear(@Valid @RequestBody Cancha c) {
+    return repo.save(c);
+  }
 
   @PutMapping("/{id}")
   @PreAuthorize("hasAnyRole('ADMIN','PROPIETARIO')")

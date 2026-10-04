@@ -34,9 +34,19 @@ class ReservaIntegrationTest {
     return LocalDate.now().plusDays(DIA.incrementAndGet());
   }
 
-  private ResultActions reservar(String token, long canchaId, LocalDate fecha, String inicio, String fin) throws Exception {
-    String body = json.writeValueAsString(Map.of(
-        "canchaId", canchaId, "fecha", fecha.toString(), "horaInicio", inicio, "horaFin", fin));
+  private ResultActions reservar(
+      String token, long canchaId, LocalDate fecha, String inicio, String fin) throws Exception {
+    String body =
+        json.writeValueAsString(
+            Map.of(
+                "canchaId",
+                canchaId,
+                "fecha",
+                fecha.toString(),
+                "horaInicio",
+                inicio,
+                "horaFin",
+                fin));
     var req = post("/api/reservas").contentType(MediaType.APPLICATION_JSON).content(body);
     if (token != null) req = req.header("Authorization", "Bearer " + token);
     return mvc.perform(req);
@@ -45,8 +55,12 @@ class ReservaIntegrationTest {
   @Test
   void jugadorCreaReservaPendienteConValorCalculado() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
-    String res = reservar(token, 1, fechaNueva(), "10:00:00", "12:00:00")
-        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+    String res =
+        reservar(token, 1, fechaNueva(), "10:00:00", "12:00:00")
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
     JsonNode r = json.readTree(res);
     assertThat(r.get("estado").asText()).isEqualTo("PENDIENTE");
     assertThat(r.get("valorTotal").decimalValue()).isEqualByComparingTo("120000"); // 2 h x $60.000
@@ -59,13 +73,15 @@ class ReservaIntegrationTest {
     LocalDate fecha = fechaNueva();
     reservar(token, 1, fecha, "14:00:00", "16:00:00").andExpect(status().isOk());
     reservar(token, 1, fecha, "15:00:00", "17:00:00").andExpect(status().isConflict());
-    reservar(token, 1, fecha, "16:00:00", "17:00:00").andExpect(status().isOk()); // contigua: no choca
+    reservar(token, 1, fecha, "16:00:00", "17:00:00")
+        .andExpect(status().isOk()); // contigua: no choca
   }
 
   @Test
   void reservaEnElPasadoResponde400() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
-    reservar(token, 1, LocalDate.now().minusDays(1), "10:00:00", "11:00:00").andExpect(status().isBadRequest());
+    reservar(token, 1, LocalDate.now().minusDays(1), "10:00:00", "11:00:00")
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -77,8 +93,12 @@ class ReservaIntegrationTest {
   @Test
   void cuerpoIncompletoResponde400() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
-    mvc.perform(post("/api/reservas").header("Authorization", "Bearer " + token)
-        .contentType(MediaType.APPLICATION_JSON).content("{\"canchaId\":1}")).andExpect(status().isBadRequest());
+    mvc.perform(
+            post("/api/reservas")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"canchaId\":1}"))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -90,12 +110,19 @@ class ReservaIntegrationTest {
   void soloElDuenoOElPersonalCancelanUnaReserva() throws Exception {
     String dueno = TestSupport.registrarJugador(mvc, json);
     String otro = TestSupport.registrarJugador(mvc, json);
-    long id = json.readTree(reservar(dueno, 1, fechaNueva(), "08:00:00", "09:00:00")
-        .andReturn().getResponse().getContentAsString()).get("id").asLong();
+    long id =
+        json.readTree(
+                reservar(dueno, 1, fechaNueva(), "08:00:00", "09:00:00")
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString())
+            .get("id")
+            .asLong();
 
     mvc.perform(post("/api/reservas/" + id + "/cancelar").header("Authorization", "Bearer " + otro))
         .andExpect(status().isForbidden());
-    mvc.perform(post("/api/reservas/" + id + "/cancelar").header("Authorization", "Bearer " + dueno))
+    mvc.perform(
+            post("/api/reservas/" + id + "/cancelar").header("Authorization", "Bearer " + dueno))
         .andExpect(status().isOk());
   }
 
@@ -103,9 +130,17 @@ class ReservaIntegrationTest {
   void unaReservaCanceladaLiberaElHorario() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
     LocalDate fecha = fechaNueva();
-    long id = json.readTree(reservar(token, 1, fecha, "18:00:00", "19:00:00")
-        .andReturn().getResponse().getContentAsString()).get("id").asLong();
-    mvc.perform(post("/api/reservas/" + id + "/cancelar").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
+    long id =
+        json.readTree(
+                reservar(token, 1, fecha, "18:00:00", "19:00:00")
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString())
+            .get("id")
+            .asLong();
+    mvc.perform(
+            post("/api/reservas/" + id + "/cancelar").header("Authorization", "Bearer " + token))
+        .andExpect(status().isOk());
     reservar(token, 1, fecha, "18:00:00", "19:00:00").andExpect(status().isOk());
   }
 
@@ -113,25 +148,55 @@ class ReservaIntegrationTest {
   void jugadorNoPuedeIniciarElPagoDeUnaReservaAjena() throws Exception {
     String dueno = TestSupport.registrarJugador(mvc, json);
     String otro = TestSupport.registrarJugador(mvc, json);
-    long id = json.readTree(reservar(dueno, 1, fechaNueva(), "20:00:00", "21:00:00")
-        .andReturn().getResponse().getContentAsString()).get("id").asLong();
+    long id =
+        json.readTree(
+                reservar(dueno, 1, fechaNueva(), "20:00:00", "21:00:00")
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString())
+            .get("id")
+            .asLong();
 
-    mvc.perform(post("/api/pagos/iniciar/" + id).header("Authorization", "Bearer " + otro)).andExpect(status().isForbidden());
-    String res = mvc.perform(post("/api/pagos/iniciar/" + id).header("Authorization", "Bearer " + dueno))
-        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+    mvc.perform(post("/api/pagos/iniciar/" + id).header("Authorization", "Bearer " + otro))
+        .andExpect(status().isForbidden());
+    String res =
+        mvc.perform(post("/api/pagos/iniciar/" + id).header("Authorization", "Bearer " + dueno))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
     assertThat(json.readTree(res).get("firmaIntegridad").asText()).hasSize(64);
   }
 
   @Test
   void laDisponibilidadSigueElHorarioConfiguradoDeLaCancha() throws Exception {
     String admin = TestSupport.loginAdmin(mvc, json);
-    LocalDate lunes = LocalDate.now().plusWeeks(40).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
-    mvc.perform(post("/api/horarios").header("Authorization", "Bearer " + admin).contentType(MediaType.APPLICATION_JSON)
-        .content(json.writeValueAsString(Map.of("canchaId", 2, "diaSemana", "MONDAY",
-            "horaApertura", "08:00", "horaCierre", "11:00")))).andExpect(status().isOk());
+    LocalDate lunes =
+        LocalDate.now().plusWeeks(40).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+    mvc.perform(
+            post("/api/horarios")
+                .header("Authorization", "Bearer " + admin)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    json.writeValueAsString(
+                        Map.of(
+                            "canchaId",
+                            2,
+                            "diaSemana",
+                            "MONDAY",
+                            "horaApertura",
+                            "08:00",
+                            "horaCierre",
+                            "11:00"))))
+        .andExpect(status().isOk());
 
-    String res = mvc.perform(get("/api/disponibilidad").param("canchaId", "2").param("fecha", lunes.toString()))
-        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+    String res =
+        mvc.perform(
+                get("/api/disponibilidad").param("canchaId", "2").param("fecha", lunes.toString()))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
     JsonNode libres = json.readTree(res).get("libres");
     assertThat(libres).hasSize(3); // 08-09, 09-10, 10-11
     assertThat(libres.get(0).get("inicio").asText()).startsWith("08:00");

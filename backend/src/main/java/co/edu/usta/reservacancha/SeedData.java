@@ -15,10 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SeedData {
 
   @Bean
-  CommandLineRunner seed(UsuarioRepository usuarios, CanchaRepository canchas, PasswordEncoder enc) {
+  CommandLineRunner seed(
+      UsuarioRepository usuarios, CanchaRepository canchas, PasswordEncoder enc) {
     return args -> {
       if (!usuarios.existsByEmail("admin@reservacancha.co")) {
-        usuarios.save(new Usuario("Administrador", "admin@reservacancha.co", enc.encode("admin123"), Role.ADMIN));
+        usuarios.save(
+            new Usuario(
+                "Administrador", "admin@reservacancha.co", enc.encode("admin123"), Role.ADMIN));
       }
       if (canchas.count() == 0) {
         Cancha c1 = new Cancha();

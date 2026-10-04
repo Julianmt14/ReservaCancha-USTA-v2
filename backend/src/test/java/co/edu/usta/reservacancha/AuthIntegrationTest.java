@@ -22,57 +22,105 @@ class AuthIntegrationTest {
   @Autowired ObjectMapper json;
 
   private String registro(Map<String, ?> datos) throws Exception {
-    return mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON)
-        .content(json.writeValueAsString(datos))).andReturn().getResponse().getContentAsString();
+    return mvc.perform(
+            post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(datos)))
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
   }
 
   @Test
   void registroCreaJugadorYEntregaToken() throws Exception {
-    String res = registro(Map.of("nombre", "Ana", "email", TestSupport.correoUnico(), "password", TestSupport.CLAVE));
+    String res =
+        registro(
+            Map.of(
+                "nombre",
+                "Ana",
+                "email",
+                TestSupport.correoUnico(),
+                "password",
+                TestSupport.CLAVE));
     assertThat(json.readTree(res).get("rol").asText()).isEqualTo("JUGADOR");
     assertThat(json.readTree(res).get("token").asText()).isNotBlank();
   }
 
   @Test
   void registroPublicoNoPuedeCrearAdministradores() throws Exception {
-    mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
-        Map.of("nombre", "Intruso", "email", TestSupport.correoUnico(), "password", TestSupport.CLAVE, "rol", "ADMIN"))))
+    mvc.perform(
+            post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    json.writeValueAsString(
+                        Map.of(
+                            "nombre",
+                            "Intruso",
+                            "email",
+                            TestSupport.correoUnico(),
+                            "password",
+                            TestSupport.CLAVE,
+                            "rol",
+                            "ADMIN"))))
         .andExpect(status().isForbidden());
   }
 
   @Test
   void registroRechazaContrasenasCortas() throws Exception {
-    mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
-        Map.of("nombre", "Ana", "email", TestSupport.correoUnico(), "password", "corta"))))
+    mvc.perform(
+            post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    json.writeValueAsString(
+                        Map.of(
+                            "nombre",
+                            "Ana",
+                            "email",
+                            TestSupport.correoUnico(),
+                            "password",
+                            "corta"))))
         .andExpect(status().isBadRequest());
   }
 
   @Test
   void registroRechazaCorreoRepetido() throws Exception {
     String correo = TestSupport.correoUnico();
-    Map<String, String> datos = Map.of("nombre", "Ana", "email", correo, "password", TestSupport.CLAVE);
-    mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(datos)))
+    Map<String, String> datos =
+        Map.of("nombre", "Ana", "email", correo, "password", TestSupport.CLAVE);
+    mvc.perform(
+            post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(datos)))
         .andExpect(status().isOk());
-    mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(datos)))
+    mvc.perform(
+            post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(datos)))
         .andExpect(status().isConflict());
   }
 
   @Test
   void loginRespondeUnauthorizedConClaveIncorrecta() throws Exception {
-    mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
-        Map.of("email", "admin@reservacancha.co", "password", "clave-equivocada"))))
+    mvc.perform(
+            post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    json.writeValueAsString(
+                        Map.of("email", "admin@reservacancha.co", "password", "clave-equivocada"))))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
   void adminSemillaPuedeIniciarSesionYConsultarElResumen() throws Exception {
     String token = TestSupport.loginAdmin(mvc, json);
-    mvc.perform(get("/api/admin/resumen").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
+    mvc.perform(get("/api/admin/resumen").header("Authorization", "Bearer " + token))
+        .andExpect(status().isOk());
   }
 
   @Test
   void jugadorNoAccedeALasRutasDeAdministracion() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
-    mvc.perform(get("/api/admin/resumen").header("Authorization", "Bearer " + token)).andExpect(status().isForbidden());
+    mvc.perform(get("/api/admin/resumen").header("Authorization", "Bearer " + token))
+        .andExpect(status().isForbidden());
   }
 }

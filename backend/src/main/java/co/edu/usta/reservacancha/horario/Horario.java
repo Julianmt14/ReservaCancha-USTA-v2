@@ -9,7 +9,8 @@ import java.time.LocalTime;
 @Table(name = "horarios")
 public class Horario {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(optional = false)
@@ -29,15 +30,47 @@ public class Horario {
 
   public Horario() {}
 
-  public Long getId() { return id; }
-  public Cancha getCancha() { return cancha; }
-  public void setCancha(Cancha cancha) { this.cancha = cancha; }
-  public DayOfWeek getDiaSemana() { return diaSemana; }
-  public void setDiaSemana(DayOfWeek diaSemana) { this.diaSemana = diaSemana; }
-  public LocalTime getHoraApertura() { return horaApertura; }
-  public void setHoraApertura(LocalTime horaApertura) { this.horaApertura = horaApertura; }
-  public LocalTime getHoraCierre() { return horaCierre; }
-  public void setHoraCierre(LocalTime horaCierre) { this.horaCierre = horaCierre; }
-  public boolean isActivo() { return activo; }
-  public void setActivo(boolean activo) { this.activo = activo; }
+  public Long getId() {
+    return id;
+  }
+
+  public Cancha getCancha() {
+    return cancha;
+  }
+
+  public void setCancha(Cancha cancha) {
+    this.cancha = cancha;
+  }
+
+  public DayOfWeek getDiaSemana() {
+    return diaSemana;
+  }
+
+  public void setDiaSemana(DayOfWeek diaSemana) {
+    this.diaSemana = diaSemana;
+  }
+
+  public LocalTime getHoraApertura() {
+    return horaApertura;
+  }
+
+  public void setHoraApertura(LocalTime horaApertura) {
+    this.horaApertura = horaApertura;
+  }
+
+  public LocalTime getHoraCierre() {
+    return horaCierre;
+  }
+
+  public void setHoraCierre(LocalTime horaCierre) {
+    this.horaCierre = horaCierre;
+  }
+
+  public boolean isActivo() {
+    return activo;
+  }
+
+  public void setActivo(boolean activo) {
+    this.activo = activo;
+  }
 }

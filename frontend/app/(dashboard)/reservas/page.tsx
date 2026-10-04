@@ -13,7 +13,9 @@ export default function ReservasPage() {
     return (
       <div className="flex flex-col gap-6 p-6">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Mis reservas</h1>
+          <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
+            Mis reservas
+          </h1>
           <p className="text-sm mt-0.5" style={{ color: 'var(--text-3)' }}>
             Historial y estado de tus reservas.
           </p>

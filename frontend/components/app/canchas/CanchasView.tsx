@@ -12,7 +12,6 @@ import { getBookingsByCourt, type BookingResponse } from '@/lib/api/bookings'
 import { useBusiness } from '@/lib/context/business-context'
 import type { CanchasFilter } from '@/lib/types/canchas'
 
-
 export interface CourtWithData {
   court: CourtResponse
   bookings: BookingResponse[]
@@ -21,12 +20,12 @@ export interface CourtWithData {
 
 export default function CanchasView() {
   const { activeBusiness } = useBusiness()
-  const [courtsData, setCourtsData]   = useState<CourtWithData[]>([])
-  const [loading, setLoading]         = useState(true)
-  const [filter, setFilter]           = useState<CanchasFilter>('all')
-  const [search, setSearch]           = useState('')
-  const [modalOpen, setModalOpen]     = useState(false)
-  const [editing, setEditing]         = useState<CourtResponse | null>(null)
+  const [courtsData, setCourtsData] = useState<CourtWithData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState<CanchasFilter>('all')
+  const [search, setSearch] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editing, setEditing] = useState<CourtResponse | null>(null)
   const [selectedCourt, setSelectedCourt] = useState<CourtResponse | null>(null)
 
   async function loadData() {
@@ -34,11 +33,11 @@ export default function CanchasView() {
     try {
       const page = await getCourts(0, 50)
       const bizCourts = activeBusiness
-        ? page.content.filter(c => c.businessId === activeBusiness.id)
+        ? page.content.filter((c) => c.businessId === activeBusiness.id)
         : page.content
 
       const results = await Promise.all(
-        bizCourts.map(async court => {
+        bizCourts.map(async (court) => {
           const [bookingsPage, schedules] = await Promise.all([
             getBookingsByCourt(court.id, 0, 500).catch(() => ({ content: [] as BookingResponse[] })),
             getSchedules(court.id).catch(() => [] as ScheduleResponse[]),
@@ -54,7 +53,9 @@ export default function CanchasView() {
     }
   }
 
-  useEffect(() => { loadData() }, [activeBusiness?.id])
+  useEffect(() => {
+    loadData()
+  }, [activeBusiness?.id])
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase()
@@ -67,9 +68,9 @@ export default function CanchasView() {
   }, [courtsData, filter, search])
 
   function handleSaved(court: CourtResponse) {
-    setCourtsData(prev => {
-      const exists = prev.find(d => d.court.id === court.id)
-      if (exists) return prev.map(d => d.court.id === court.id ? { ...d, court } : d)
+    setCourtsData((prev) => {
+      const exists = prev.find((d) => d.court.id === court.id)
+      if (exists) return prev.map((d) => (d.court.id === court.id ? { ...d, court } : d))
       return [...prev, { court, bookings: [], schedules: [] }]
     })
   }
@@ -80,7 +81,7 @@ export default function CanchasView() {
   }
 
   function handleDeleted(id: number) {
-    setCourtsData(prev => prev.filter(d => d.court.id !== id))
+    setCourtsData((prev) => prev.filter((d) => d.court.id !== id))
     setSelectedCourt(null)
   }
 
@@ -99,17 +100,22 @@ export default function CanchasView() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Canchas</h1>
+          <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
+            Canchas
+          </h1>
           <p className="text-sm mt-0.5" style={{ color: 'var(--text-3)' }}>
             Administra las canchas, tarifas y disponibilidad del complejo.
           </p>
         </div>
         <button
-          onClick={() => { setEditing(null); setModalOpen(true) }}
+          onClick={() => {
+            setEditing(null)
+            setModalOpen(true)
+          }}
           className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold cursor-pointer"
           style={{ background: 'var(--green)', color: '#fff' }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'var(--green-deep)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'var(--green)')}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--green-deep)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--green)')}
         >
           <IconPlus />
           Nueva cancha
@@ -119,7 +125,11 @@ export default function CanchasView() {
       {loading ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-52 rounded-[14px] animate-pulse" style={{ background: 'var(--panel)' }} />
+            <div
+              key={i}
+              className="h-52 rounded-[14px] animate-pulse"
+              style={{ background: 'var(--panel)' }}
+            />
           ))}
         </div>
       ) : (
@@ -128,14 +138,20 @@ export default function CanchasView() {
 
           <div className="flex flex-col gap-4">
             <CanchasFilters
-              search={search} onSearch={v => setSearch(v)}
-              filter={filter} onFilter={v => setFilter(v)}
+              search={search}
+              onSearch={(v) => setSearch(v)}
+              filter={filter}
+              onFilter={(v) => setFilter(v)}
             />
 
             {filtered.length === 0 ? (
               <div
                 className="rounded-[14px] px-6 py-12 text-center text-sm"
-                style={{ background: 'var(--panel)', border: '1px solid var(--line)', color: 'var(--text-3)' }}
+                style={{
+                  background: 'var(--panel)',
+                  border: '1px solid var(--line)',
+                  color: 'var(--text-3)',
+                }}
               >
                 {courtsData.length === 0
                   ? 'Aún no tienes canchas registradas. Crea la primera.'
@@ -150,7 +166,10 @@ export default function CanchasView() {
                     bookings={bookings}
                     schedules={schedules}
                     onClick={() => setSelectedCourt(court)}
-                    onEdit={() => { setEditing(court); setModalOpen(true) }}
+                    onEdit={() => {
+                      setEditing(court)
+                      setModalOpen(true)
+                    }}
                   />
                 ))}
               </div>

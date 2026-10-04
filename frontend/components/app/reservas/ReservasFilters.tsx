@@ -4,10 +4,10 @@ import type { ReservasFilter } from '@/lib/types/dashboard'
 import { IconSearch } from '@/components/app/icons'
 
 const STATUS_TABS: { value: ReservasFilter; label: string }[] = [
-  { value: 'all',       label: 'Todas' },
+  { value: 'all', label: 'Todas' },
   { value: 'confirmed', label: 'Confirmadas' },
-  { value: 'pending',   label: 'Pendientes' },
-  { value: 'canceled',  label: 'Canceladas' },
+  { value: 'pending', label: 'Pendientes' },
+  { value: 'canceled', label: 'Canceladas' },
 ]
 
 interface Props {
@@ -20,12 +20,20 @@ interface Props {
   courtOptions: string[]
 }
 
-export default function ReservasFilters({ search, onSearch, filter, onFilter, court, onCourt, courtOptions }: Props) {
+export default function ReservasFilters({
+  search,
+  onSearch,
+  filter,
+  onFilter,
+  court,
+  onCourt,
+  courtOptions,
+}: Props) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       {/* Tabs de estado */}
       <div className="flex items-center gap-1 rounded-lg p-1" style={{ background: 'var(--bg-2)' }}>
-        {STATUS_TABS.map(tab => (
+        {STATUS_TABS.map((tab) => (
           <button
             key={tab.value}
             onClick={() => onFilter(tab.value)}
@@ -49,7 +57,7 @@ export default function ReservasFilters({ search, onSearch, filter, onFilter, co
           <IconSearch />
           <input
             value={search}
-            onChange={e => onSearch(e.target.value)}
+            onChange={(e) => onSearch(e.target.value)}
             placeholder="Buscar equipo o cancha…"
             className="bg-transparent outline-none w-44 text-xs placeholder:text-[var(--text-3)]"
             style={{ color: 'var(--text)' }}
@@ -58,7 +66,7 @@ export default function ReservasFilters({ search, onSearch, filter, onFilter, co
 
         <select
           value={court}
-          onChange={e => onCourt(e.target.value)}
+          onChange={(e) => onCourt(e.target.value)}
           className="rounded-lg px-3 py-2 text-xs outline-none cursor-pointer"
           style={{
             background: 'var(--bg-2)',
@@ -66,8 +74,10 @@ export default function ReservasFilters({ search, onSearch, filter, onFilter, co
             color: 'var(--text-2)',
           }}
         >
-          {courtOptions.map(c => (
-            <option key={c} value={c}>{c}</option>
+          {courtOptions.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
           ))}
         </select>
       </div>

@@ -12,7 +12,7 @@ const ModalContext = createContext<ModalContextValue | null>(null)
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [isNewReservaOpen, setNewReserva] = useState(false)
-  const openNewReserva  = useCallback(() => setNewReserva(true),  [])
+  const openNewReserva = useCallback(() => setNewReserva(true), [])
   const closeNewReserva = useCallback(() => setNewReserva(false), [])
 
   return (

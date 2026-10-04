@@ -32,9 +32,13 @@ public class WompiService {
   private final String publicKey;
   private final String baseUrl;
   private final String currency;
-  private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
+  private final HttpClient http =
+      HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
 
-  public WompiService(PagoRepository pagos, ReservaRepository reservas, ObjectMapper json,
+  public WompiService(
+      PagoRepository pagos,
+      ReservaRepository reservas,
+      ObjectMapper json,
       @Value("${app.wompi.integrity-secret}") String integritySecret,
       @Value("${app.wompi.public-key}") String publicKey,
       @Value("${app.wompi.base-url}") String baseUrl,
@@ -85,27 +89,35 @@ public class WompiService {
   }
 
   /**
-   * Confirma un pago consultando la transaccion directamente a Wompi (no confiamos en lo que
-   * diga el navegador): la referencia y el monto deben coincidir con el pago registrado.
+   * Confirma un pago consultando la transaccion directamente a Wompi (no confiamos en lo que diga
+   * el navegador): la referencia y el monto deben coincidir con el pago registrado.
    */
   public Pago confirmar(Long reservaId, String transactionId, Usuario quien) {
     reservaAutorizada(reservaId, quien);
     JsonNode tx = consultarTransaccion(transactionId);
     String referencia = tx.path("reference").asText("");
-    Pago p = pagos.findByReferencia(referencia)
-        .filter(x -> x.getReserva().getId().equals(reservaId))
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "La transaccion no corresponde a esta reserva"));
+    Pago p =
+        pagos
+            .findByReferencia(referencia)
+            .filter(x -> x.getReserva().getId().equals(reservaId))
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "La transaccion no corresponde a esta reserva"));
     long esperado = p.getValor().multiply(java.math.BigDecimal.valueOf(100)).longValue();
     if (tx.path("amount_in_cents").asLong(-1) != esperado) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El monto de la transaccion no coincide");
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "El monto de la transaccion no coincide");
     }
     return webhook(referencia, transactionId, tx.path("status").asText("PENDING"));
   }
 
   /** Webhook de Wompi: actualiza pago y marca reserva PAGADA/APROBADA. */
   public Pago webhook(String referencia, String transactionId, String status) {
-    Pago p = pagos.findByReferencia(referencia)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pago no existe"));
+    Pago p =
+        pagos
+            .findByReferencia(referencia)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pago no existe"));
     if ("APPROVED".equalsIgnoreCase(status)) {
       p.setEstado(EstadoPago.APROBADO);
       p.getReserva().setEstado(EstadoReserva.PAGADA);
@@ -122,8 +134,11 @@ public class WompiService {
   }
 
   private Reserva reservaAutorizada(Long reservaId, Usuario quien) {
-    Reserva r = reservas.findById(reservaId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no existe"));
+    Reserva r =
+        reservas
+            .findById(reservaId)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no existe"));
     boolean personal = quien.getRol() == Role.ADMIN || quien.getRol() == Role.PROPIETARIO;
     if (!personal && !r.getUsuario().getId().equals(quien.getId())) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sin permiso sobre esta reserva");
@@ -133,11 +148,15 @@ public class WompiService {
 
   private JsonNode consultarTransaccion(String transactionId) {
     try {
-      HttpRequest req = HttpRequest.newBuilder(URI.create(baseUrl + "/transactions/" + transactionId))
-          .timeout(Duration.ofSeconds(10)).GET().build();
+      HttpRequest req =
+          HttpRequest.newBuilder(URI.create(baseUrl + "/transactions/" + transactionId))
+              .timeout(Duration.ofSeconds(10))
+              .GET()
+              .build();
       HttpResponse<String> res = http.send(req, HttpResponse.BodyHandlers.ofString());
       if (res.statusCode() != 200) {
-        throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Wompi respondio " + res.statusCode());
+        throw new ResponseStatusException(
+            HttpStatus.BAD_GATEWAY, "Wompi respondio " + res.statusCode());
       }
       return json.readTree(res.body()).path("data");
     } catch (ResponseStatusException e) {

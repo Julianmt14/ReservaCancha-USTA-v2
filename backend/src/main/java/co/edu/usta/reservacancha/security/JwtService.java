@@ -24,7 +24,8 @@ public class JwtService {
   }
 
   public String generate(UserDetails user) {
-    String rol = user.getAuthorities().stream().findFirst().map(Object::toString).orElse("ROLE_JUGADOR");
+    String rol =
+        user.getAuthorities().stream().findFirst().map(Object::toString).orElse("ROLE_JUGADOR");
     return Jwts.builder()
         .subject(user.getUsername())
         .claim("rol", rol)
@@ -39,7 +40,8 @@ public class JwtService {
   }
 
   public boolean valid(String token, UserDetails user) {
-    return username(token).equals(user.getUsername()) && claims(token).getExpiration().after(new Date());
+    return username(token).equals(user.getUsername())
+        && claims(token).getExpiration().after(new Date());
   }
 
   private Claims claims(String token) {

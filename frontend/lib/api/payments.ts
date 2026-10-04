@@ -4,44 +4,44 @@ import type { Page } from './courts'
 export type PaymentStatus = 'PENDING' | 'APPROVED' | 'DECLINED' | 'VOIDED' | 'ERROR'
 
 export interface PaymentIntentResponse {
-  bookingId:          number
-  reference:          string
-  amountInCents:      number
-  currency:           string
-  publicKey:          string
+  bookingId: number
+  reference: string
+  amountInCents: number
+  currency: string
+  publicKey: string
   integritySignature: string
 }
 
 export interface PaymentResponse {
-  id:                 number
-  bookingId:          number
+  id: number
+  bookingId: number
   wompiTransactionId: string | null
-  wompiReference:     string
-  amountInCents:      number
-  currency:           string
-  status:             PaymentStatus
-  paymentMethod:      string | null
-  createdAt:          string
-  updatedAt:          string
+  wompiReference: string
+  amountInCents: number
+  currency: string
+  status: PaymentStatus
+  paymentMethod: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 export interface BusinessPaymentResponse {
-  paymentId:        number
-  bookingId:        number
-  bookingCode:      string
-  courtId:          number
-  courtName:        string
-  playerId:         number
-  playerName:       string
-  playerPhone:      string
-  startAt:          string
-  endAt:            string
-  bookingStatus:    'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'
-  amountInCents:    number
-  currency:         string
-  paymentStatus:    PaymentStatus
-  paymentMethod:    string | null
-  wompiReference:   string | null
+  paymentId: number
+  bookingId: number
+  bookingCode: string
+  courtId: number
+  courtName: string
+  playerId: number
+  playerName: string
+  playerPhone: string
+  startAt: string
+  endAt: string
+  bookingStatus: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'
+  amountInCents: number
+  currency: string
+  paymentStatus: PaymentStatus
+  paymentMethod: string | null
+  wompiReference: string | null
   paymentCreatedAt: string
 }
 
@@ -126,10 +126,14 @@ export async function getPayment(bookingId: number): Promise<PaymentResponse> {
 }
 
 /** Pagos de todas las reservas (solo administrador / propietario). */
-export async function getBusinessPayments(_businessId: number, page = 0, size = 20): Promise<Page<BusinessPaymentResponse>> {
+export async function getBusinessPayments(
+  _businessId: number,
+  page = 0,
+  size = 20
+): Promise<Page<BusinessPaymentResponse>> {
   const pagos = await apiFetch<PagoDto[]>('/api/admin/pagos')
   const rows = pagos
-    .map<BusinessPaymentResponse>(p => ({
+    .map<BusinessPaymentResponse>((p) => ({
       paymentId: p.id,
       bookingId: p.reserva.id,
       bookingCode: `RC-${p.reserva.id}`,
@@ -162,7 +166,7 @@ export async function getBusinessPayments(_businessId: number, page = 0, size = 
 export async function confirmPayment(bookingId: number, transactionId: string): Promise<PaymentResponse> {
   const pago = await apiFetch<PagoDto>(
     `/api/pagos/confirmar/${bookingId}?transactionId=${encodeURIComponent(transactionId)}`,
-    { method: 'POST' },
+    { method: 'POST' }
   )
   return toPayment(pago)
 }

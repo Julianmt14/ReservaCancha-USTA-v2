@@ -11,16 +11,16 @@ export interface BookingResponse {
   playerId: number
   playerName: string
   playerPhone?: string
-  startAt: string       // ISO 8601 local, sin zona horaria
-  endAt: string         // ISO 8601 local, sin zona horaria
+  startAt: string // ISO 8601 local, sin zona horaria
+  endAt: string // ISO 8601 local, sin zona horaria
   status: BookingStatus
   createdAt: string
 }
 
 export interface BookingRequest {
   courtId: number
-  startAt: string       // "YYYY-MM-DDTHH:mm:ss"
-  endAt: string         // "YYYY-MM-DDTHH:mm:ss"
+  startAt: string // "YYYY-MM-DDTHH:mm:ss"
+  endAt: string // "YYYY-MM-DDTHH:mm:ss"
 }
 
 /** Reserva completa, como la devuelven POST /api/reservas, /mias y cancelar. */
@@ -103,12 +103,17 @@ export async function getMyBookings(page = 0, size = 10, token?: string): Promis
   return paged(ordered, page, size)
 }
 
-export async function getBookingsByCourt(courtId: number, page = 0, size = 200, token?: string): Promise<Page<BookingResponse>> {
+export async function getBookingsByCourt(
+  courtId: number,
+  page = 0,
+  size = 200,
+  token?: string
+): Promise<Page<BookingResponse>> {
   const [bloques, court] = await Promise.all([
     apiFetch<OcupacionDto[]>(`/api/reservas/cancha/${courtId}`, {}, token),
     getCourt(courtId, token),
   ])
-  const content = bloques.map<BookingResponse>(b => ({
+  const content = bloques.map<BookingResponse>((b) => ({
     id: b.id,
     bookingCode: bookingCode(b.id),
     courtId,

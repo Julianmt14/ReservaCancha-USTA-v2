@@ -27,8 +27,12 @@ public class AdminController {
   }
 
   @GetMapping("/reservas")
-  public Object todas() { return reservas.findAll(); }
+  public Object todas() {
+    return reservas.findAll();
+  }
 
   @GetMapping("/pagos")
-  public Object pagos() { return pagos.findAll(); }
+  public Object pagos() {
+    return pagos.findAll();
+  }
 }

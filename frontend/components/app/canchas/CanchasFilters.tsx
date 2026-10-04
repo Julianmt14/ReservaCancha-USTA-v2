@@ -4,10 +4,10 @@ import type { CanchasFilter } from '@/lib/types/canchas'
 import { IconSearch } from '@/components/app/icons'
 
 const TABS: { value: CanchasFilter; label: string }[] = [
-  { value: 'all',           label: 'Todas' },
-  { value: 'activa',        label: 'Activas' },
+  { value: 'all', label: 'Todas' },
+  { value: 'activa', label: 'Activas' },
   { value: 'mantenimiento', label: 'En mantenimiento' },
-  { value: 'inactiva',      label: 'Inactivas' },
+  { value: 'inactiva', label: 'Inactivas' },
 ]
 
 interface Props {
@@ -21,7 +21,7 @@ export default function CanchasFilters({ search, onSearch, filter, onFilter }: P
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-1 rounded-lg p-1" style={{ background: 'var(--bg-2)' }}>
-        {TABS.map(tab => (
+        {TABS.map((tab) => (
           <button
             key={tab.value}
             onClick={() => onFilter(tab.value)}
@@ -43,7 +43,7 @@ export default function CanchasFilters({ search, onSearch, filter, onFilter }: P
         <IconSearch />
         <input
           value={search}
-          onChange={e => onSearch(e.target.value)}
+          onChange={(e) => onSearch(e.target.value)}
           placeholder="Buscar cancha…"
           className="bg-transparent outline-none w-44 text-xs placeholder:text-[var(--text-3)]"
           style={{ color: 'var(--text)' }}

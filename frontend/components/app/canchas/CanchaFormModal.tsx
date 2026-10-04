@@ -8,8 +8,8 @@ import { useBusiness } from '@/lib/context/business-context'
 import { ApiError } from '@/lib/api/client'
 
 const SPORT_OPTIONS = [
-  { value: 'FUTBOL',   label: 'Fútbol' },
-  { value: 'PADEL',    label: 'Pádel' },
+  { value: 'FUTBOL', label: 'Fútbol' },
+  { value: 'PADEL', label: 'Pádel' },
   { value: 'VOLEIBOL', label: 'Voleibol' },
 ]
 
@@ -31,51 +31,63 @@ const EMPTY: FormState = { name: '', sportType: 'FUTBOL', description: '', price
 
 export default function CanchaFormModal({ open, onClose, onSaved, editing }: Props) {
   const { activeBusiness } = useBusiness()
-  const [form, setForm]   = useState<FormState>(EMPTY)
+  const [form, setForm] = useState<FormState>(EMPTY)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!open) return
     setError(null)
-    setForm(editing ? {
-      name:         editing.name,
-      sportType:    editing.sportType,
-      description:  editing.description ?? '',
-      pricePerHour: String(editing.pricePerHour),
-    } : EMPTY)
+    setForm(
+      editing
+        ? {
+            name: editing.name,
+            sportType: editing.sportType,
+            description: editing.description ?? '',
+            pricePerHour: String(editing.pricePerHour),
+          }
+        : EMPTY
+    )
   }, [open, editing])
 
   function set(k: keyof FormState) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-      setForm(prev => ({ ...prev, [k]: e.target.value }))
+      setForm((prev) => ({ ...prev, [k]: e.target.value }))
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const price = parseFloat(form.pricePerHour)
-    if (!activeBusiness) { setError('No hay un negocio activo seleccionado.'); return }
-    if (!form.name.trim()) { setError('El nombre es obligatorio.'); return }
-    if (isNaN(price) || price <= 0) { setError('El precio debe ser mayor a 0.'); return }
+    if (!activeBusiness) {
+      setError('No hay un negocio activo seleccionado.')
+      return
+    }
+    if (!form.name.trim()) {
+      setError('El nombre es obligatorio.')
+      return
+    }
+    if (isNaN(price) || price <= 0) {
+      setError('El precio debe ser mayor a 0.')
+      return
+    }
 
     setError(null)
     setLoading(true)
     try {
       const payload = {
-        businessId:   activeBusiness.id,
-        name:         form.name.trim(),
-        sportType:    form.sportType,
-        description:  form.description.trim() || undefined,
+        businessId: activeBusiness.id,
+        name: form.name.trim(),
+        sportType: form.sportType,
+        description: form.description.trim() || undefined,
         pricePerHour: price,
       }
-      const saved = editing
-        ? await updateCourt(editing.id, payload)
-        : await createCourt(payload)
+      const saved = editing ? await updateCourt(editing.id, payload) : await createCourt(payload)
       onSaved(saved)
       onClose()
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) setError('Ya existe una cancha con ese nombre.')
-      else if (err instanceof ApiError && err.status === 403) setError('No tienes permiso para realizar esta acción.')
+      else if (err instanceof ApiError && err.status === 403)
+        setError('No tienes permiso para realizar esta acción.')
       else setError('No se pudo guardar. Intenta de nuevo.')
     } finally {
       setLoading(false)
@@ -88,9 +100,7 @@ export default function CanchaFormModal({ open, onClose, onSaved, editing }: Pro
     <Modal open={open} onClose={onClose} title={isEdit ? 'Editar cancha' : 'Nueva cancha'} width="max-w-xl">
       <form onSubmit={handleSubmit}>
         <div className="px-6 py-5 flex flex-col gap-4">
-
           <div className="grid grid-cols-2 gap-4">
-
             <div className="col-span-2">
               <FormField label="Nombre de la cancha">
                 <Input value={form.name} onChange={set('name')} placeholder="Ej. Cancha Norte" required />
@@ -100,9 +110,13 @@ export default function CanchaFormModal({ open, onClose, onSaved, editing }: Pro
             <FormField label="Deporte">
               <Select
                 value={form.sportType}
-                onChange={e => setForm(prev => ({ ...prev, sportType: e.target.value as SportType }))}
+                onChange={(e) => setForm((prev) => ({ ...prev, sportType: e.target.value as SportType }))}
               >
-                {SPORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                {SPORT_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
               </Select>
             </FormField>
 
@@ -131,17 +145,16 @@ export default function CanchaFormModal({ open, onClose, onSaved, editing }: Pro
           </div>
 
           {error && (
-            <p className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--red)', background: 'var(--red-soft)' }}>
+            <p
+              className="text-xs rounded-lg px-3 py-2"
+              style={{ color: 'var(--red)', background: 'var(--red-soft)' }}
+            >
               {error}
             </p>
           )}
         </div>
 
-        <SubmitRow
-          onCancel={onClose}
-          loading={loading}
-          label={isEdit ? 'Guardar cambios' : 'Crear cancha'}
-        />
+        <SubmitRow onCancel={onClose} loading={loading} label={isEdit ? 'Guardar cambios' : 'Crear cancha'} />
       </form>
     </Modal>
   )

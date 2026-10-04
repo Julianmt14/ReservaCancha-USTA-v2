@@ -207,21 +207,19 @@ Mejor escribirlo que fingir:
   El tope de 24 solo puede bajar; cuando se toque un archivo con avisos, se limpian.
 - El frontend no tiene pruebas automáticas. Por eso el punto 3 de la DoD pide captura y pasos.
 - Falta medir RNF-01 (consultas de disponibilidad en menos de 2,0 s) con JMeter.
-- Los commits anteriores a estos acuerdos tienen títulos de hasta 111 caracteres y algunos están redactados
-  como sustantivo («pruebas de…») y no como verbo. No los reescribimos, porque tampoco reescribimos historial
-  compartido; los nuevos sí cumplen.
 - La integración inicial de `julian` y `miguel` en `dev`, la de `dev` en `main` y la de este mismo documento
   se hicieron sin *pull request* revisado, porque estos acuerdos todavía no existían. De aquí en adelante,
-  con *pull request* revisado. El primero será el de Miguel con su aceptación.
+  con *pull request* revisado, empezando por el próximo cambio.
 
 ---
 
 ## 8. Aceptación
 
-Cada quien acepta editando su propia fila, desde su rama, con un commit
-`docs(estandares): aceptar estándares (nombre)`, y lo integra por *pull request*.
+Cada integrante acepta con su nombre completo y la frase de la tabla. La aceptación de los dos quedó
+registrada el 4 de octubre de 2026. Desde aquí, cambiar estos estándares necesita la aprobación de los dos
+en un *pull request*.
 
 | Nombre completo | Aceptación | Fecha |
 |---|---|---|
 | Julián Ricardo Mejía Torres | Conozco y acepto estos estándares. | 4 de octubre de 2026 |
-| Miguel Franco (completar nombre completo) | _pendiente_ | |
+| Juan Miguel Franco Baca | Conozco y acepto estos estándares. | 4 de octubre de 2026 |

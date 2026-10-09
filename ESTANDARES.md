@@ -206,7 +206,8 @@ Mejor escribirlo que fingir:
   error a aviso a propósito: reescribir esos efectos sin pruebas de interfaz era más riesgoso que dejarlos).
   El tope de 24 solo puede bajar; cuando se toque un archivo con avisos, se limpian.
 - El frontend no tiene pruebas automáticas. Por eso el punto 3 de la DoD pide captura y pasos.
-- Falta medir RNF-01 (consultas de disponibilidad en menos de 2,0 s) con JMeter.
+- RNF-01 (consultas de disponibilidad en menos de 2,0 s) se midió el 8 de octubre de 2026 con
+  `tests/rendimiento/medir_rnf01.py` en local; falta medirlo con JMeter, el instrumento de la ficha.
 - La integración inicial de `julian` y `miguel` en `dev`, la de `dev` en `main` y la de este mismo documento
   se hicieron sin *pull request* revisado, porque estos acuerdos todavía no existían. De aquí en adelante,
   con *pull request* revisado, empezando por el próximo cambio.

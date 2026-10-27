@@ -3,8 +3,10 @@
 Centralizar la gestión de reservas y pagos de canchas deportivas (Acta de Proyecto, Gerencia de Software — USTA Villavicencio, 28-sep-2026).
 
 **Equipo**
-- Julián Mejía: backend, seguridad, API, JWT, roles, Wompi.
-- Miguel Franco: frontend, datos, despliegue, pruebas, integración API.
+- Julián Mejía — *Product Owner* y desarrollador: backend, seguridad, API, JWT, roles, Wompi.
+- Miguel Franco — *Scrum Master* y desarrollador: frontend, datos, despliegue, pruebas, integración API.
+
+Sprints de una semana, alineados con los hitos del acta. Qué le toca a cada rol: [`ESTANDARES.md`](ESTANDARES.md), sección 8.
 
 **Alcance v1.0:** usuarios y roles · canchas y horarios · disponibilidad · crear/consultar reservas · Wompi **sandbox** · consultas admin.
 **Excluye:** app móvil nativa, facturación DIAN, PayPal/Stripe, torneos, SMS, QR.

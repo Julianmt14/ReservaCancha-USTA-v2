@@ -1,7 +1,8 @@
 # Estándares del equipo
 
-Proyecto: ReservaCancha Colombia · Versión 1.0 · 4 de octubre de 2026
-Equipo: Julián Mejía (backend, seguridad, pagos) y Miguel Franco (frontend, pruebas, despliegue)
+Proyecto: ReservaCancha Colombia · Versión 1.1 · 23 de octubre de 2026
+Equipo: Julián Mejía (Product Owner; backend, seguridad, pagos) y Miguel Franco (Scrum Master; frontend,
+pruebas, despliegue)
 
 Somos dos y casi nunca estamos conectados a la vez, así que no podemos depender de preguntarnos todo por
 WhatsApp. Esto es lo que acordamos para trabajar sin estorbarnos: cómo escribimos el código, cómo lo
@@ -180,7 +181,8 @@ línea), propone una salida y justifica en media línea. Nunca se señala el pro
 
 **Si no nos ponemos de acuerdo.** Primero con un dato: una prueba o una medición. Si sigue el desacuerdo,
 decide quien lleva ese módulo según el acta (Julián: backend, seguridad y pagos; Miguel: frontend, pruebas y
-despliegue).
+despliegue). Si el desacuerdo es de prioridad o de alcance (qué entra al sprint y qué espera), decide el
+Product Owner (sección 8).
 
 ---
 
@@ -214,11 +216,39 @@ Mejor escribirlo que fingir:
 
 ---
 
-## 8. Aceptación
+## 8. Roles de Scrum
+
+El acta (sección 10) reparte el trabajo por área, pero no dice quién es Product Owner ni quién es Scrum
+Master. Lo definimos aquí el 23 de octubre de 2026. Somos dos, así que los dos seguimos siendo *Developers*:
+el rol de Scrum se suma a lo que ya hace cada uno, no lo reemplaza.
+
+| Rol | Quién | De qué responde |
+|---|---|---|
+| Product Owner | Julián Mejía | Ordena el backlog en GitHub Issues y escribe los criterios de aceptación. Decide los cambios de alcance y qué vuelve al backlog. Al cerrar el sprint acepta o rechaza el incremento, integra `dev` en `main` y crea la etiqueta de versión. Recibe las observaciones de Canchas Mónaco y las convierte en historias. |
+| Scrum Master | Miguel Franco | Convoca y facilita la planeación, la demo con el administrador y la retrospectiva. Cuida el tablero y sus límites WIP, y que cada sprint cierre en su semana con las reglas de cierre del acta (Tabla 9). Persigue los impedimentos (despliegue de prueba, llaves de Wompi sandbox, agenda con el administrador) y avisa cuando un *pull request* pasa el plazo de la sección 5. |
+| Developers | Los dos | Construyen el incremento, cumplen la Definition of Ready y la Definition of Done, y se revisan uno al otro. |
+
+Ser Product Owner no le da a Julián permiso de aprobar lo suyo: sus cambios los sigue revisando Miguel, como
+dice la sección 5.
+
+**Cómo se comprueba en el repositorio**
+
+- El orden de los *issues* y del tablero lo mueve el Product Owner.
+- Cada sprint cerrado tiene su etiqueta de versión sobre `main` (`v0.1.0`, `v0.2.0`…), creada por el Product
+  Owner.
+- La retrospectiva queda escrita en el *pull request* de `dev` a `main` que cierra el sprint: qué salió bien,
+  qué no y el compromiso para el siguiente. La escribe el Scrum Master.
+
+El acta ya está radicada y no la cambiamos; este ajuste se reporta en el control de cambios del siguiente
+avance.
+
+---
+
+## 9. Aceptación
 
 Cada integrante acepta con su nombre completo y la frase de la tabla. La aceptación de los dos quedó
 registrada el 4 de octubre de 2026. Desde aquí, cambiar estos estándares necesita la aprobación de los dos
-en un *pull request*.
+en un *pull request*. Los roles de la sección 8 entran de esa misma forma.
 
 | Nombre completo | Aceptación | Fecha |
 |---|---|---|

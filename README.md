@@ -50,6 +50,7 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 |---|---|---|
 | `JWT_SECRET` | secreto de desarrollo | **obligatorio cambiarlo en cualquier despliegue** (Base64, 256 bits o más) |
 | `CORS_ORIGINS` | `http://localhost:3000` | orígenes del frontend, separados por coma |
+| `ADMIN_PASSWORD` | `admin123` | clave del administrador semilla; **obligatorio cambiarla en cualquier despliegue** |
 | `WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `WOMPI_INTEGRITY_SECRET` | placeholders sandbox | llaves del comercio en Wompi |
 | `WOMPI_EVENTS_SECRET` | `test_events_XXXX` | secreto compartido que debe enviar el webhook en `X-Webhook-Secret` |
 

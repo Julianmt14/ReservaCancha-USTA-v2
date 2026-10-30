@@ -24,6 +24,9 @@ spring:
       mode: always
 
 app:
+  admin:
+    # admin123 es solo para desarrollo; en la dirección pública se define ADMIN_PASSWORD
+    password: ${ADMIN_PASSWORD:admin123}
   cors:
     origins: ${CORS_ORIGINS:http://localhost:3000}
   jwt:

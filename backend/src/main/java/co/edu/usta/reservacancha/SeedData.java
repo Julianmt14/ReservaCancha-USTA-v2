@@ -6,6 +6,7 @@ import co.edu.usta.reservacancha.user.Role;
 import co.edu.usta.reservacancha.user.Usuario;
 import co.edu.usta.reservacancha.user.UsuarioRepository;
 import java.math.BigDecimal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +17,15 @@ public class SeedData {
 
   @Bean
   CommandLineRunner seed(
-      UsuarioRepository usuarios, CanchaRepository canchas, PasswordEncoder enc) {
+      UsuarioRepository usuarios,
+      CanchaRepository canchas,
+      PasswordEncoder enc,
+      @Value("${app.admin.password}") String claveAdmin) {
     return args -> {
       if (!usuarios.existsByEmail("admin@reservacancha.co")) {
         usuarios.save(
             new Usuario(
-                "Administrador", "admin@reservacancha.co", enc.encode("admin123"), Role.ADMIN));
+                "Administrador", "admin@reservacancha.co", enc.encode(claveAdmin), Role.ADMIN));
       }
       if (canchas.count() == 0) {
         Cancha c1 = new Cancha();

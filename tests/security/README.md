@@ -11,7 +11,8 @@ Con el backend en `http://localhost:8080`:
 npx newman run tests/security/SEC-01.postman_collection.json
 ```
 
-Otra URL: `--env-var baseUrl=https://mi-servidor`. Los usuarios de prueba se crean solos en cada corrida
+Otra URL: `--env-var baseUrl=https://mi-servidor`. En la dirección pública también hay que pasar la clave del
+administrador: `--env-var adminPassword=...` (la misma de `ADMIN_PASSWORD`). Los usuarios de prueba se crean solos en cada corrida
 (correos `*@sec01.test`) y la reserva de prueba se cancela al final.
 
 ## Qué cubre

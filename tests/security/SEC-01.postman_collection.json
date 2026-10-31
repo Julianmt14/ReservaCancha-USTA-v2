@@ -32,7 +32,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@reservacancha.co\",\n  \"password\": \"admin123\"\n}"
+              "raw": "{\n  \"email\": \"admin@reservacancha.co\",\n  \"password\": \"{{adminPassword}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -1838,6 +1838,10 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:8080"
+    },
+    {
+      "key": "adminPassword",
+      "value": "admin123"
     }
   ]
 }

@@ -81,6 +81,7 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 2. `POST /api/pagos/iniciar/{id}` → `{referencia, valorCentavos, firmaIntegridad, llavePublica}`.
 3. Widget de checkout de Wompi en el frontend.
 4. `POST /api/pagos/confirmar/{id}?transactionId=...` verifica la transacción con Wompi → reserva `PAGADA`.
+5. En la dirección pública, el webhook queda en `POST <backend>/api/wompi/webhook` y exige el secreto de `WOMPI_EVENTS_SECRET`.
 
 ## Calidad (ISO/IEC 25010)
 

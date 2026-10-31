@@ -9,5 +9,7 @@ RUN mvn -q package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+# El plan gratuito da 512 MB: la JVM no debe pasar del 70 %
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=70"
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

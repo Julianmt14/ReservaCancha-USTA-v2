@@ -54,6 +54,19 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 | `WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `WOMPI_INTEGRITY_SECRET` | placeholders sandbox | llaves del comercio en Wompi |
 | `WOMPI_EVENTS_SECRET` | `test_events_XXXX` | secreto compartido que debe enviar el webhook en `X-Webhook-Secret` |
 
+## Despliegue
+
+Dirección pública de prueba, en capas gratuitas. Las claves se cargan en cada servicio, nunca en el repositorio.
+
+| Parte | Servicio | Configuración |
+|---|---|---|
+| Base de datos | Neon (PostgreSQL) | `SPRING_DATASOURCE_URL=jdbc:postgresql://<host>/<base>?sslmode=require`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` y `SPRING_DATASOURCE_DRIVER=org.postgresql.Driver` |
+| Backend | Render (Docker, carpeta `backend`, rama `dev`) | Las variables de arriba más `JWT_SECRET`, `ADMIN_PASSWORD`, `CORS_ORIGINS` y las de Wompi |
+| Frontend | Vercel (carpeta `frontend`, rama `dev`) | `NEXT_PUBLIC_API_URL` con la dirección del backend |
+
+El backend gratuito se apaga tras 15 minutos sin tráfico y tarda cerca de un minuto en despertar. Antes de una demo
+hay que abrir la página unos minutos antes.
+
 ## API (backend)
 
 | Método | Ruta | Acceso | Descripción |

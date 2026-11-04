@@ -58,11 +58,16 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 
 Dirección pública de prueba, en capas gratuitas. Las claves se cargan en cada servicio, nunca en el repositorio.
 
+- Aplicación: https://reservacancha-rho.vercel.app
+- API: https://reservacancha-api.onrender.com
+
 | Parte | Servicio | Configuración |
 |---|---|---|
-| Base de datos | Neon (PostgreSQL) | `SPRING_DATASOURCE_URL=jdbc:postgresql://<host>/<base>?sslmode=require`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` y `SPRING_DATASOURCE_DRIVER=org.postgresql.Driver` |
-| Backend | Render (Docker, carpeta `backend`, rama `dev`) | Las variables de arriba más `JWT_SECRET`, `ADMIN_PASSWORD`, `CORS_ORIGINS` y las de Wompi |
-| Frontend | Vercel (carpeta `frontend`, rama `dev`) | `NEXT_PUBLIC_API_URL` con la dirección del backend |
+| Base de datos | Neon (PostgreSQL 18, región `aws-us-east-1`) | `SPRING_DATASOURCE_URL=jdbc:postgresql://<host>/neondb?sslmode=require` (conexión directa, sin el *pooler*), `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` y `SPRING_DATASOURCE_DRIVER=org.postgresql.Driver` |
+| Backend | Render (Docker, carpeta `backend`, rama `dev`, región Virginia) | Las variables de arriba más `JWT_SECRET`, `ADMIN_PASSWORD`, `CORS_ORIGINS` (la dirección de la aplicación) y las de Wompi |
+| Frontend | Vercel (carpeta `frontend` de la rama `dev`, con `vercel deploy --prod`) | `NEXT_PUBLIC_API_URL` con la dirección de la API, `NEXT_PUBLIC_WOMPI_SANDBOX`, `NEXT_PUBLIC_ESTABLISHMENT_NAME` y `NEXT_PUBLIC_ESTABLISHMENT_ADDRESS` |
+
+Las variables `NEXT_PUBLIC_*` quedan dentro de la página al compilar: si cambian, hay que volver a publicar el frontend.
 
 El backend gratuito se apaga tras 15 minutos sin tráfico y tarda cerca de un minuto en despertar. Antes de una demo
 hay que abrir la página unos minutos antes.

@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -110,6 +111,21 @@ public class WompiService {
           HttpStatus.BAD_REQUEST, "El monto de la transaccion no coincide");
     }
     return webhook(referencia, transactionId, tx.path("status").asText("PENDING"));
+  }
+
+  /**
+   * Evento firmado de Wompi. Vacio si la referencia no es de esta aplicacion o si el monto no
+   * coincide con el del pago registrado.
+   */
+  public Optional<Pago> evento(
+      String referencia, String transactionId, String status, long valorCentavos) {
+    return pagos
+        .findByReferencia(referencia)
+        .filter(
+            p ->
+                p.getValor().multiply(java.math.BigDecimal.valueOf(100)).longValue()
+                    == valorCentavos)
+        .map(p -> webhook(referencia, transactionId, status));
   }
 
   /** Webhook de Wompi: actualiza pago y marca reserva PAGADA/APROBADA. */

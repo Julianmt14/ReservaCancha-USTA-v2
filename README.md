@@ -52,7 +52,7 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 | `CORS_ORIGINS` | `http://localhost:3000` | orígenes del frontend, separados por coma |
 | `ADMIN_PASSWORD` | `admin123` | clave del administrador semilla; **obligatorio cambiarla en cualquier despliegue** |
 | `WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `WOMPI_INTEGRITY_SECRET` | placeholders sandbox | llaves del comercio en Wompi |
-| `WOMPI_EVENTS_SECRET` | `test_events_XXXX` | secreto compartido que debe enviar el webhook en `X-Webhook-Secret` |
+| `WOMPI_EVENTS_SECRET` | `test_events_XXXX` | secreto de eventos de Wompi: con él se verifica la firma (`signature.checksum`) de cada evento |
 
 ## Despliegue
 
@@ -90,7 +90,7 @@ hay que abrir la página unos minutos antes.
 | POST | `/api/pagos/iniciar/{reservaId}` | dueño, ADMIN, PROPIETARIO | referencia y firma de integridad Wompi |
 | POST | `/api/pagos/confirmar/{reservaId}?transactionId=` | dueño, ADMIN, PROPIETARIO | confirma consultando la transacción a Wompi |
 | GET | `/api/pagos/reserva/{reservaId}` | dueño, ADMIN, PROPIETARIO | pagos de la reserva |
-| POST | `/api/wompi/webhook` | secreto compartido | evento de Wompi |
+| POST | `/api/wompi/webhook` | firma del evento | evento `transaction.updated` de Wompi |
 | GET | `/api/admin/resumen`, `/reservas`, `/pagos` | ADMIN, PROPIETARIO | consultas administrativas |
 
 ## Wompi sandbox (10 flujos antes de semana 15)
@@ -99,7 +99,7 @@ hay que abrir la página unos minutos antes.
 2. `POST /api/pagos/iniciar/{id}` → `{referencia, valorCentavos, firmaIntegridad, llavePublica}`.
 3. Widget de checkout de Wompi en el frontend.
 4. `POST /api/pagos/confirmar/{id}?transactionId=...` verifica la transacción con Wompi → reserva `PAGADA`.
-5. En la dirección pública, el webhook queda en `POST <backend>/api/wompi/webhook` y exige el secreto de `WOMPI_EVENTS_SECRET`.
+5. En la dirección pública, el webhook queda en `POST <backend>/api/wompi/webhook` y solo acepta eventos firmados con `WOMPI_EVENTS_SECRET`. Esa dirección se registra como URL de eventos en el panel de Wompi (modo de pruebas).
 
 ## Calidad (ISO/IEC 25010)
 

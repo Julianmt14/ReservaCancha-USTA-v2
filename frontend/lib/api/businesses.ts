@@ -28,7 +28,7 @@ export interface BusinessRequest {
 
 export const ESTABLISHMENT: BusinessResponse = {
   id: 1,
-  name: process.env.NEXT_PUBLIC_ESTABLISHMENT_NAME ?? 'ReservaCancha Villavicencio',
+  name: process.env.NEXT_PUBLIC_ESTABLISHMENT_NAME ?? 'Canchas Mónaco',
   description: null,
   phone: null,
   address: process.env.NEXT_PUBLIC_ESTABLISHMENT_ADDRESS ?? 'Villavicencio, Meta',

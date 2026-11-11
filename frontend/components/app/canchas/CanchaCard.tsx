@@ -123,7 +123,8 @@ export default function CanchaCard({ court, bookings, schedules, onClick, onEdit
             <CanchaStatusBadge status={court.active ? 'activa' : 'inactiva'} />
           </div>
           <div className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
-            {sportLabel[court.sportType] ?? court.sportType}
+            {sportLabel[court.sportType] ?? court.sportType} ·{' '}
+            {court.depositPercent === 0 ? 'sin abono' : `abono ${court.depositPercent} %`}
           </div>
         </div>
         <button

@@ -28,8 +28,9 @@ function errorMessage(raw: string, fallback: string): string {
   return raw || fallback
 }
 
-export async function apiFetch<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
-  const jwt = token || storedToken()
+/** Sin `token` usa la sesión guardada; con `null` manda la petición sin sesión. */
+export async function apiFetch<T>(path: string, init: RequestInit = {}, token?: string | null): Promise<T> {
+  const jwt = token === null ? null : token || storedToken()
   const res = await fetch(`${BASE_URL}${path}`, {
     ...init,
     headers: {

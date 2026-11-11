@@ -52,8 +52,8 @@ export default function CreateReservaModal({
     const now = new Date()
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
     setDate(preselectedDate || today)
-    setStart(preselectedStart || '08:00')
-    setEnd(preselectedEnd || '09:00')
+    setStart(preselectedStart || '14:00')
+    setEnd(preselectedEnd || '15:00')
   }, [open, preselectedCourtId])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -120,7 +120,7 @@ export default function CreateReservaModal({
               <Input
                 type="time"
                 value={startTime}
-                step="1800"
+                step="3600"
                 onChange={(e) => setStart(e.target.value)}
                 required
               />
@@ -129,7 +129,7 @@ export default function CreateReservaModal({
               <Input
                 type="time"
                 value={endTime}
-                step="1800"
+                step="3600"
                 onChange={(e) => setEnd(e.target.value)}
                 required
               />

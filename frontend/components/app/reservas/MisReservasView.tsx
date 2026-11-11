@@ -24,6 +24,15 @@ function formatTime(iso: string) {
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
+/** Qué falta pagar según el abono de la cancha (HU-14). */
+function pagoEnCancha(b: BookingResponse): string | null {
+  const p = b.depositPercent ?? 100
+  if (b.status === 'CANCELLED') return null
+  if (p === 0) return 'Pagas en la cancha'
+  if (b.status === 'PENDING') return p < 100 ? 'Falta el abono' : 'Falta el pago'
+  return p < 100 ? 'Abono pagado' : null
+}
+
 type Filter = 'all' | 'confirmed' | 'pending' | 'canceled'
 
 const FILTER_TABS: { value: Filter; label: string }[] = [
@@ -67,6 +76,26 @@ export default function MisReservasView() {
     }
   }
 
+  function openDetail(b: BookingResponse) {
+    const cached = courtCache.get(b.courtId)
+    if (cached) {
+      setDetailCourt(cached)
+      setDetailBooking(b)
+      setCourtLoading(false)
+      return
+    }
+    setDetailCourt(null)
+    setDetailBooking(b)
+    setCourtLoading(true)
+    getCourt(b.courtId)
+      .then((court) => {
+        courtCache.set(court.id, court)
+        setDetailCourt(court)
+      })
+      .catch(() => setDetailCourt(null))
+      .finally(() => setCourtLoading(false))
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {/* Tabs */}
@@ -86,8 +115,80 @@ export default function MisReservasView() {
         ))}
       </div>
 
-      {/* Table */}
-      <div className="rounded-[14px] overflow-hidden" style={{ border: '1px solid var(--line)' }}>
+      {/* Celular: tarjetas */}
+      <div className="flex flex-col gap-3 md:hidden">
+        {loading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-24 rounded-[14px] animate-pulse"
+              style={{ background: 'var(--panel)' }}
+            />
+          ))
+        ) : filtered.length === 0 ? (
+          <p className="py-10 text-center text-xs" style={{ color: 'var(--text-3)' }}>
+            {filter === 'all' ? 'Aún no tienes reservas.' : 'No hay reservas en esta categoría.'}
+          </p>
+        ) : (
+          filtered.map((b) => {
+            const canCancel = b.status === 'PENDING' || b.status === 'CONFIRMED'
+            return (
+              <div
+                key={b.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => openDetail(b)}
+                onKeyDown={(e) => e.key === 'Enter' && openDetail(b)}
+                className="flex flex-col gap-2 rounded-[14px] p-4 cursor-pointer"
+                style={{ background: 'var(--panel)', border: '1px solid var(--line)' }}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                      {b.courtName}
+                    </p>
+                    <p className="font-mono text-xs mt-0.5" style={{ color: 'var(--text-2)' }}>
+                      {formatDate(b.startAt)} · {formatTime(b.startAt)}–{formatTime(b.endAt)}
+                    </p>
+                  </div>
+                  <span className="font-mono text-[11px]" style={{ color: 'var(--text-3)' }}>
+                    {b.bookingCode}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <ReservaStatusBadge status={STATUS_MAP[b.status]} />
+                    {pagoEnCancha(b) && (
+                      <span className="mt-1 block text-[11px]" style={{ color: 'var(--text-3)' }}>
+                        {pagoEnCancha(b)}
+                      </span>
+                    )}
+                  </div>
+                  {canCancel && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleCancel(b.id)
+                      }}
+                      disabled={canceling === b.id}
+                      className="text-xs font-medium px-3 py-1.5 rounded-md cursor-pointer disabled:opacity-40"
+                      style={{ color: 'var(--red)', background: 'var(--red-soft)' }}
+                    >
+                      {canceling === b.id ? '…' : 'Cancelar'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )
+          })
+        )}
+      </div>
+
+      {/* Pantallas grandes: tabla */}
+      <div
+        className="hidden md:block rounded-[14px] overflow-hidden"
+        style={{ border: '1px solid var(--line)' }}
+      >
         <div className="overflow-x-auto">
           <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
             <thead>
@@ -140,25 +241,7 @@ export default function MisReservasView() {
                   return (
                     <tr
                       key={b.id}
-                      onClick={() => {
-                        const cached = courtCache.get(b.courtId)
-                        if (cached) {
-                          setDetailCourt(cached)
-                          setDetailBooking(b)
-                          setCourtLoading(false)
-                          return
-                        }
-                        setDetailCourt(null)
-                        setDetailBooking(b)
-                        setCourtLoading(true)
-                        getCourt(b.courtId)
-                          .then((court) => {
-                            courtCache.set(court.id, court)
-                            setDetailCourt(court)
-                          })
-                          .catch(() => setDetailCourt(null))
-                          .finally(() => setCourtLoading(false))
-                      }}
+                      onClick={() => openDetail(b)}
                       style={{
                         background: i % 2 === 0 ? 'var(--panel)' : 'var(--panel-2)',
                         borderBottom: '1px solid var(--line)',
@@ -188,6 +271,11 @@ export default function MisReservasView() {
                       </td>
                       <td className="px-4 py-3">
                         <ReservaStatusBadge status={status} />
+                        {pagoEnCancha(b) && (
+                          <span className="mt-1 block text-[11px]" style={{ color: 'var(--text-3)' }}>
+                            {pagoEnCancha(b)}
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         {canCancel && (

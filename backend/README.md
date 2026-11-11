@@ -22,6 +22,7 @@ Pruebas de integración con MockMvc y H2 (`src/test`):
 | Clase | Qué verifica |
 |---|---|
 | `AuthIntegrationTest` | registro (sin rol `ADMIN`, contraseña de 8 a 72 caracteres, correo repetido), login 401, acceso por rol |
+| `PersonalIntegrationTest` | TEC-05 y HU-15: el registro público solo crea jugadores (`PROPIETARIO`, `EMPLEADO` y `ADMIN` → 403), el administrador crea empleados, el empleado ve la agenda con el celular y cancela pero no ve métricas, pagos, empleados ni canchas, un empleado desactivado no entra ni usa su token, y las métricas cuentan reservas, abonos y ocupación |
 | `ReservaIntegrationTest` | valor calculado, traslapes (409), fechas pasadas (400), cancelación por dueño, pagos ajenos (403), disponibilidad según el horario de la cancha |
 | `ReservaRapidaTest` | HU-13 y HU-14: reserva sin cuenta con nombre y celular, el mismo celular junta sus reservas, solo 1 o 2 horas en punto dentro del horario, la misma hora no se reserva dos veces, 10 personas a la vez → 1 reserva y 9 con 409, abono del 50 % en fútbol y 400 en vóley, un celular del personal no entrega su sesión |
 

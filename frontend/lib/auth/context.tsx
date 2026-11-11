@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { homeFor } from './routes'
 import {
   login as apiLogin,
   saveSession,
@@ -37,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const auth = await apiLogin(data)
       saveSession(auth)
       setUser(auth)
-      router.push('/')
+      router.push(homeFor(auth.role))
     },
     [router]
   )

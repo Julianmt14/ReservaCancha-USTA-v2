@@ -12,23 +12,27 @@ export interface AuthResponse {
   userId: number
   email: string
   fullName: string
-  role: 'JUGADOR' | 'ADMIN_CANCHA' | 'ORGANIZADOR' | 'SUPER_ADMIN'
+  role: 'JUGADOR' | 'EMPLEADO' | 'ADMIN_CANCHA' | 'ORGANIZADOR' | 'SUPER_ADMIN'
 }
 
 /** Respuesta de POST /api/auth/login del backend. */
 interface LoginDto {
   token: string
   email: string
-  rol: 'ADMIN' | 'JUGADOR' | 'PROPIETARIO'
+  rol: 'ADMIN' | 'JUGADOR' | 'PROPIETARIO' | 'EMPLEADO'
   id: number
   nombre: string
 }
 
 const DEFAULT_EXPIRATION_MS = 24 * 60 * 60 * 1000
 
-/** Administrador y propietario comparten el panel de gestion; el jugador ve la vista de reservas. */
+/**
+ * Administrador y propietario comparten el panel de gestion; el empleado solo atiende reservas
+ * (HU-15) y el jugador ve su vista de reservas.
+ */
 function toRole(rol: LoginDto['rol']): AuthResponse['role'] {
-  return rol === 'JUGADOR' ? 'JUGADOR' : 'ADMIN_CANCHA'
+  if (rol === 'JUGADOR' || rol === 'EMPLEADO') return rol
+  return 'ADMIN_CANCHA'
 }
 
 /** Milisegundos que le quedan al token segun su claim `exp`; si no se puede leer, 24 h. */

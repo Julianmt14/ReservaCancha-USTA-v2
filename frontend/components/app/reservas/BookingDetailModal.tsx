@@ -67,7 +67,9 @@ export default function BookingDetailModal({
   if (!open || !booking) return null
 
   const displayBooking = paidBooking ?? booking
-  const isPending = displayBooking.status === 'PENDING' && user?.role === 'JUGADOR'
+  // Las canchas sin abono (0 %) se pagan completas en la cancha: no hay pago en línea
+  const abono = displayBooking.depositPercent ?? 100
+  const isPending = displayBooking.status === 'PENDING' && user?.role === 'JUGADOR' && abono > 0
 
   function handlePaymentDone(payment: PaymentResponse) {
     if (payment.status === 'APPROVED') {
@@ -392,7 +394,7 @@ export default function BookingDetailModal({
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--green-deep)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--green)')}
                 >
-                  Pagar reserva
+                  {abono < 100 ? 'Pagar abono' : 'Pagar reserva'}
                 </button>
               )}
               {goToScheduleAction && (

@@ -239,7 +239,7 @@ export default function WompiCheckoutModal({ open, bookingId, bookingCode, onClo
                     className="text-[11px] uppercase tracking-wide font-semibold"
                     style={{ color: 'var(--text-3)' }}
                   >
-                    Total a pagar
+                    Pagar ahora
                   </p>
                   <p
                     className="text-[28px] font-bold tracking-[-0.03em] mt-1"

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/context'
 import { useBusiness } from '@/lib/context/business-context'
 import { getCourts, getSchedules, type ScheduleResponse } from '@/lib/api/courts'
@@ -8,7 +9,6 @@ import { getBookingsByCourt, type BookingResponse } from '@/lib/api/bookings'
 import StatsGrid from '@/components/app/dashboard/StatsGrid'
 import WeekCalendar from '@/components/app/dashboard/WeekCalendar'
 import BookingDetailModal from '@/components/app/reservas/BookingDetailModal'
-import PlayerHome from '@/components/app/home/PlayerHome'
 import {
   IconStatReservas,
   IconStatIngresos,
@@ -396,7 +396,14 @@ function AdminDashboard() {
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth()
-  if (isLoading) return null
-  if (user?.role === 'JUGADOR') return <PlayerHome />
+  const router = useRouter()
+  const esJugador = user?.role === 'JUGADOR'
+
+  // HU-13: el jugador reserva en /reservar; el panel es del personal
+  useEffect(() => {
+    if (!isLoading && esJugador) router.replace('/reservar')
+  }, [isLoading, esJugador, router])
+
+  if (isLoading || esJugador) return null
   return <AdminDashboard />
 }

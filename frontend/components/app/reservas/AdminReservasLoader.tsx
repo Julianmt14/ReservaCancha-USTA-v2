@@ -285,6 +285,14 @@ function ListadoTab({
                   </td>
                   <td className="px-4 py-3 text-[12.5px] font-medium" style={{ color: 'var(--text)' }}>
                     {b.playerName}
+                    {b.playerPhone && (
+                      <span
+                        className="block font-mono text-[11px] font-normal"
+                        style={{ color: 'var(--text-3)' }}
+                      >
+                        {b.playerPhone}
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-[12px]" style={{ color: 'var(--text-2)' }}>
                     {b.courtName}

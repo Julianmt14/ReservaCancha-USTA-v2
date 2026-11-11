@@ -11,6 +11,8 @@ export interface BookingResponse {
   playerId: number
   playerName: string
   playerPhone?: string
+  /** Abono de la cancha que se paga en línea (0 = todo en la cancha; 100 = valor completo). */
+  depositPercent?: number
   startAt: string // ISO 8601 local, sin zona horaria
   endAt: string // ISO 8601 local, sin zona horaria
   status: BookingStatus
@@ -26,8 +28,8 @@ export interface BookingRequest {
 /** Reserva completa, como la devuelven POST /api/reservas, /mias y cancelar. */
 interface ReservaDto {
   id: number
-  usuario: { id: number; nombre: string }
-  cancha: { id: number; nombre: string }
+  usuario: { id: number; nombre: string; celular?: string | null }
+  cancha: { id: number; nombre: string; porcentajeAbono?: number | null }
   fecha: string
   horaInicio: string
   horaFin: string
@@ -45,6 +47,7 @@ interface OcupacionDto {
   estado: string
   usuarioId: number
   jugador?: string
+  celular?: string | null
 }
 
 function toStatus(estado: string): BookingStatus {
@@ -70,6 +73,8 @@ function toBooking(r: ReservaDto): BookingResponse {
     courtName: r.cancha.nombre,
     playerId: r.usuario.id,
     playerName: r.usuario.nombre,
+    playerPhone: r.usuario.celular ?? undefined,
+    depositPercent: r.cancha.porcentajeAbono ?? 100,
     startAt: `${r.fecha}T${r.horaInicio}`,
     endAt: `${r.fecha}T${r.horaFin}`,
     status: toStatus(r.estado),
@@ -120,6 +125,7 @@ export async function getBookingsByCourt(
     courtName: court.name,
     playerId: b.usuarioId,
     playerName: b.jugador ?? 'Reservado',
+    playerPhone: b.celular ?? undefined,
     startAt: `${b.fecha}T${b.horaInicio}`,
     endAt: `${b.fecha}T${b.horaFin}`,
     status: toStatus(b.estado),

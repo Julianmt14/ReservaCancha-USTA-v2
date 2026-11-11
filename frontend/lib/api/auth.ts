@@ -32,7 +32,7 @@ function toRole(rol: LoginDto['rol']): AuthResponse['role'] {
 }
 
 /** Milisegundos que le quedan al token segun su claim `exp`; si no se puede leer, 24 h. */
-function remainingMs(token: string): number {
+export function remainingMs(token: string): number {
   try {
     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
     if (typeof payload.exp === 'number') return Math.max(payload.exp * 1000 - Date.now(), 0)
@@ -82,6 +82,8 @@ export function clearSession(): void {
 
 export function getStoredUser(): AuthResponse | null {
   if (typeof window === 'undefined') return null
+  // Si la cookie del token ya venció, el perfil guardado no sirve
+  if (!/(?:^|;\s*)token=[^;]+/.test(document.cookie)) return null
   const raw = localStorage.getItem('user')
   if (!raw) return null
   try {

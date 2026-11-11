@@ -49,7 +49,7 @@ const playerNavSections: NavSection[] = [
   {
     heading: 'Explorar',
     items: [
-      { name: 'Inicio', href: '/', icon: <IconDashboard /> },
+      { name: 'Reservar', href: '/reservar', icon: <IconDashboard /> },
       { name: 'Mis reservas', href: '/reservas', icon: <IconReservas /> },
     ],
   },

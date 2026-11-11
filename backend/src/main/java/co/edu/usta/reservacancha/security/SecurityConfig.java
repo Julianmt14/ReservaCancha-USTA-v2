@@ -46,6 +46,10 @@ public class SecurityConfig {
                     // HU-13: el jugador reserva sin cuenta, solo con nombre y celular
                     .requestMatchers(HttpMethod.POST, "/api/reservas/rapida")
                     .permitAll()
+                    // La agenda la ve todo el personal; el resto de la administración, solo el
+                    // administrador (métricas, empleados y pagos)
+                    .requestMatchers(HttpMethod.GET, "/api/admin/reservas")
+                    .hasAnyRole("ADMIN", "PROPIETARIO", "EMPLEADO")
                     .requestMatchers("/api/admin/**")
                     .hasAnyRole("ADMIN", "PROPIETARIO")
                     .anyRequest()

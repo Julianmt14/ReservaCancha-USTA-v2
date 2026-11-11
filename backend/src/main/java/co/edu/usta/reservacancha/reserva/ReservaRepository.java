@@ -10,6 +10,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
   List<Reserva> findByUsuarioId(Long usuarioId);
 
+  List<Reserva> findByFechaBetween(LocalDate desde, LocalDate hasta);
+
   List<Reserva> findByCanchaIdAndFecha(Long canchaId, LocalDate fecha);
 
   List<Reserva> findByCanchaIdAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(

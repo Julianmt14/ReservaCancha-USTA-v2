@@ -11,6 +11,7 @@ import {
   IconTorneos,
   IconPagos,
   IconConfig,
+  IconEmpleados,
   IconBars,
   IconClose,
   IconSearch,
@@ -20,10 +21,10 @@ import {
   IconChevronDown,
 } from '@/components/app/icons'
 import { useAuth } from '@/lib/auth/context'
+import { canVisit, homeFor } from '@/lib/auth/routes'
 import { useBusiness } from '@/lib/context/business-context'
 import { useModalContext } from '@/lib/context/modal-context'
 import CreateReservaModal from '@/components/app/reservas/CreateReservaModal'
-import type { BookingResponse } from '@/lib/api/bookings'
 
 type NavItem = { name: string; href: string; icon: React.ReactNode; badge?: string }
 type NavSection = { heading: string; items: NavItem[] }
@@ -41,7 +42,18 @@ const adminNavSections: NavSection[] = [
   },
   {
     heading: 'Sistema',
-    items: [{ name: 'Configuración', href: '#', icon: <IconConfig /> }],
+    items: [
+      { name: 'Empleados', href: '/empleados', icon: <IconEmpleados /> },
+      { name: 'Configuración', href: '#', icon: <IconConfig /> },
+    ],
+  },
+]
+
+// HU-15: el empleado ve la agenda, reserva por teléfono y cancela; nada más
+const employeeNavSections: NavSection[] = [
+  {
+    heading: 'Operación',
+    items: [{ name: 'Reservas', href: '/reservas', icon: <IconReservas /> }],
   },
 ]
 
@@ -240,13 +252,20 @@ function SidebarContent() {
 
   const roleLabel: Record<string, string> = {
     ADMIN_CANCHA: 'Administrador',
+    EMPLEADO: 'Empleado',
     JUGADOR: 'Jugador',
     ORGANIZADOR: 'Organizador',
     SUPER_ADMIN: 'Super Admin',
   }
 
   const isPlayer = !authLoading && user?.role === 'JUGADOR'
-  const navSections = authLoading ? [] : isPlayer ? playerNavSections : adminNavSections
+  const navSections = authLoading
+    ? []
+    : isPlayer
+      ? playerNavSections
+      : user?.role === 'EMPLEADO'
+        ? employeeNavSections
+        : adminNavSections
 
   return (
     <div className="flex grow flex-col overflow-y-auto px-[14px] py-5">
@@ -450,26 +469,32 @@ function OnboardingGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
 
-  const isAdmin = !authLoading && user !== null && user.role !== 'JUGADOR'
+  const isAdmin = !authLoading && user !== null && user.role !== 'JUGADOR' && user.role !== 'EMPLEADO'
+  // HU-15: si el empleado abre una página del administrador, vuelve a la agenda
+  const blocked = !authLoading && !canVisit(user?.role, pathname)
   const loading = authLoading || (isAdmin && bizLoading)
   // Solo redirige si la carga fue exitosa (sin error) y el array está vacío
   const needsOnboarding = isAdmin && !bizLoading && !loadError && businesses.length === 0
 
   useEffect(() => {
+    if (blocked) {
+      router.replace(homeFor(user?.role))
+      return
+    }
     if (!loading && needsOnboarding && pathname !== '/onboarding') {
       router.replace('/onboarding')
     }
-  }, [loading, needsOnboarding, pathname, router])
+  }, [blocked, loading, needsOnboarding, pathname, router, user])
 
   if (loading) return <div className="min-h-screen" style={{ background: 'var(--bg)' }} />
-  if (needsOnboarding) return null
+  if (blocked || needsOnboarding) return null
 
   return <>{children}</>
 }
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const { isLoading } = useAuth()
-  const { isNewReservaOpen, closeNewReserva } = useModalContext()
+  const { isNewReservaOpen, closeNewReserva, notifyReservaCreada } = useModalContext()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   if (isLoading) return <div className="min-h-screen" style={{ background: 'var(--bg)' }} />
@@ -519,7 +544,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <CreateReservaModal
           open={isNewReservaOpen}
           onClose={closeNewReserva}
-          onSaved={(_b: BookingResponse) => {
+          onSaved={() => {
+            notifyReservaCreada()
             closeNewReserva()
           }}
         />

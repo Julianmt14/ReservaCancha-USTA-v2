@@ -102,6 +102,33 @@ export async function createBooking(data: BookingRequest): Promise<BookingRespon
   return toBooking(reserva)
 }
 
+/**
+ * HU-15: el personal reserva por teléfono con el nombre y el celular del jugador. Usa la reserva sin
+ * cuenta y descarta la sesión del jugador que devuelve, para no tocar la del personal.
+ */
+export async function createPhoneBooking(
+  data: BookingRequest & { playerName: string; playerPhone: string }
+): Promise<BookingResponse> {
+  const [fecha, horaInicio] = data.startAt.split('T')
+  const horaFin = data.endAt.split('T')[1]
+  const res = await apiFetch<{ reserva: ReservaDto }>(
+    '/api/reservas/rapida',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        nombre: data.playerName,
+        celular: data.playerPhone,
+        canchaId: data.courtId,
+        fecha,
+        horaInicio,
+        horaFin,
+      }),
+    },
+    null
+  )
+  return toBooking(res.reserva)
+}
+
 export async function getMyBookings(page = 0, size = 10, token?: string): Promise<Page<BookingResponse>> {
   const reservas = await apiFetch<ReservaDto[]>('/api/reservas/mias', {}, token)
   const ordered = reservas.map(toBooking).sort((a, b) => a.startAt.localeCompare(b.startAt))
@@ -126,12 +153,23 @@ export async function getBookingsByCourt(
     playerId: b.usuarioId,
     playerName: b.jugador ?? 'Reservado',
     playerPhone: b.celular ?? undefined,
+    // HU-14: el personal ve si falta el abono o si se paga todo en la cancha
+    depositPercent: court.depositPercent,
     startAt: `${b.fecha}T${b.horaInicio}`,
     endAt: `${b.fecha}T${b.horaFin}`,
     status: toStatus(b.estado),
     createdAt: '',
   }))
   return paged(content, page, size)
+}
+
+/** Qué falta pagar según el abono de la cancha (HU-14). Lo ven el jugador y el personal (`personal`). */
+export function pagoEnCancha(b: BookingResponse, personal = false): string | null {
+  const p = b.depositPercent ?? 100
+  if (b.status === 'CANCELLED') return null
+  if (p === 0) return personal ? 'Paga en la cancha' : 'Pagas en la cancha'
+  if (b.status === 'PENDING') return p < 100 ? 'Falta el abono' : 'Falta el pago'
+  return p < 100 ? 'Abono pagado' : null
 }
 
 export async function cancelBooking(id: number): Promise<BookingResponse> {

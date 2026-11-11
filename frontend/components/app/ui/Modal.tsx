@@ -32,6 +32,9 @@ export default function Modal({ open, onClose, title, width = 'max-w-lg', childr
       }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
         className={`w-full ${width} rounded-2xl flex flex-col max-h-[90vh]`}
         style={{ background: 'var(--panel)', border: '1px solid var(--line-2)' }}
       >

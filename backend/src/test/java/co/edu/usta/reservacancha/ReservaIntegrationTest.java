@@ -56,7 +56,7 @@ class ReservaIntegrationTest {
   void jugadorCreaReservaPendienteConValorCalculado() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
     String res =
-        reservar(token, 1, fechaNueva(), "10:00:00", "12:00:00")
+        reservar(token, 1, fechaNueva(), "14:00:00", "16:00:00")
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
@@ -80,14 +80,14 @@ class ReservaIntegrationTest {
   @Test
   void reservaEnElPasadoResponde400() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
-    reservar(token, 1, LocalDate.now().minusDays(1), "10:00:00", "11:00:00")
+    reservar(token, 1, LocalDate.now().minusDays(1), "14:00:00", "15:00:00")
         .andExpect(status().isBadRequest());
   }
 
   @Test
   void horaFinAnteriorAHoraInicioResponde400() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
-    reservar(token, 1, fechaNueva(), "12:00:00", "10:00:00").andExpect(status().isBadRequest());
+    reservar(token, 1, fechaNueva(), "16:00:00", "14:00:00").andExpect(status().isBadRequest());
   }
 
   @Test
@@ -103,7 +103,7 @@ class ReservaIntegrationTest {
 
   @Test
   void sinTokenNoSePuedeReservar() throws Exception {
-    reservar(null, 1, fechaNueva(), "10:00:00", "11:00:00").andExpect(status().is4xxClientError());
+    reservar(null, 1, fechaNueva(), "14:00:00", "15:00:00").andExpect(status().is4xxClientError());
   }
 
   @Test
@@ -112,7 +112,7 @@ class ReservaIntegrationTest {
     String otro = TestSupport.registrarJugador(mvc, json);
     long id =
         json.readTree(
-                reservar(dueno, 1, fechaNueva(), "08:00:00", "09:00:00")
+                reservar(dueno, 1, fechaNueva(), "15:00:00", "16:00:00")
                     .andReturn()
                     .getResponse()
                     .getContentAsString())
@@ -150,7 +150,7 @@ class ReservaIntegrationTest {
     String otro = TestSupport.registrarJugador(mvc, json);
     long id =
         json.readTree(
-                reservar(dueno, 1, fechaNueva(), "20:00:00", "21:00:00")
+                reservar(dueno, 2, fechaNueva(), "20:00:00", "21:00:00")
                     .andReturn()
                     .getResponse()
                     .getContentAsString())
@@ -173,6 +173,22 @@ class ReservaIntegrationTest {
     String admin = TestSupport.loginAdmin(mvc, json);
     LocalDate lunes =
         LocalDate.now().plusWeeks(40).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+    // Cancha nueva, sin horario: las de la semilla ya abren de 2:00 a 10:00 p. m.
+    long canchaId =
+        json.readTree(
+                mvc.perform(
+                        post("/api/canchas")
+                            .header("Authorization", "Bearer " + admin)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(
+                                json.writeValueAsString(
+                                    Map.of("nombre", "Cancha de prueba", "precioHora", 50000))))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString())
+            .get("id")
+            .asLong();
     mvc.perform(
             post("/api/horarios")
                 .header("Authorization", "Bearer " + admin)
@@ -181,7 +197,7 @@ class ReservaIntegrationTest {
                     json.writeValueAsString(
                         Map.of(
                             "canchaId",
-                            2,
+                            canchaId,
                             "diaSemana",
                             "MONDAY",
                             "horaApertura",
@@ -192,7 +208,9 @@ class ReservaIntegrationTest {
 
     String res =
         mvc.perform(
-                get("/api/disponibilidad").param("canchaId", "2").param("fecha", lunes.toString()))
+                get("/api/disponibilidad")
+                    .param("canchaId", String.valueOf(canchaId))
+                    .param("fecha", lunes.toString()))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()

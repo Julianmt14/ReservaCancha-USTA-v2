@@ -36,14 +36,24 @@ public class ReservaService {
     if (!fin.isAfter(inicio))
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST, "horaFin debe ser mayor a horaInicio");
+    // Se reserva por horas completas: 1 o 2 horas, siempre en punto
+    if (!enPunto(inicio) || !enPunto(fin)) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Las horas deben ser en punto");
+    }
+    long duracion = Duration.between(inicio, fin).toMinutes();
+    if (duracion != 60 && duracion != 120) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Solo se puede reservar 1 o 2 horas");
+    }
     if (fecha.isBefore(LocalDate.now())
         || (fecha.isEqual(LocalDate.now()) && !inicio.isAfter(LocalTime.now()))) {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST, "No se puede reservar en un horario que ya paso");
     }
+    // Con la cancha bloqueada, dos personas que piden la misma hora a la vez no quedan las dos
     Cancha cancha =
         canchas
-            .findById(canchaId)
+            .bloquearParaReservar(canchaId)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cancha no existe"));
     if (!cancha.isActiva())
@@ -82,6 +92,10 @@ public class ReservaService {
     r.setValorTotal(total);
     r.setEstado(EstadoReserva.PENDIENTE);
     return reservas.save(r);
+  }
+
+  private static boolean enPunto(LocalTime t) {
+    return t.getMinute() == 0 && t.getSecond() == 0 && t.getNano() == 0;
   }
 
   @Transactional

@@ -154,7 +154,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const dia = String(1 + Math.floor(Math.random() * 28)).padStart(2, '0');",
-                  "const hora = 6 + Math.floor(Math.random() * 14);",
+                  "const hora = 14 + Math.floor(Math.random() * 8);",
                   "pm.collectionVariables.set('fecha', '2031-03-' + dia);",
                   "pm.collectionVariables.set('horaInicio', String(hora).padStart(2, '0') + ':00:00');",
                   "pm.collectionVariables.set('horaFin', String(hora + 1).padStart(2, '0') + ':00:00');"
@@ -186,7 +186,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"canchaId\": 1,\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"{{horaInicio}}\",\n  \"horaFin\": \"{{horaFin}}\"\n}"
+              "raw": "{\n  \"canchaId\": 2,\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"{{horaInicio}}\",\n  \"horaFin\": \"{{horaFin}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/reservas",

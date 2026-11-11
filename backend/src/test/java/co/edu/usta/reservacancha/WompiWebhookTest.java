@@ -36,16 +36,23 @@ class WompiWebhookTest {
   @Value("${app.wompi.events-secret}")
   String secretoEventos;
 
-  /** Reserva de una hora en la Cancha 1 con su pago iniciado: {token, reservaId, referencia}. */
+  /**
+   * Reserva de una hora en la Cancha 2 (fútbol 7, abono del 50 %) con su pago iniciado: {token,
+   * reservaId, referencia}.
+   */
   private Object[] pagoIniciado() throws Exception {
     String token = TestSupport.registrarJugador(mvc, json);
     String reserva =
         json.writeValueAsString(
             Map.of(
-                "canchaId", 1,
-                "fecha", LocalDate.now().plusDays(DIA.incrementAndGet()).toString(),
-                "horaInicio", "18:00:00",
-                "horaFin", "19:00:00"));
+                "canchaId",
+                2,
+                "fecha",
+                LocalDate.now().plusDays(DIA.incrementAndGet()).toString(),
+                "horaInicio",
+                "18:00:00",
+                "horaFin",
+                "19:00:00"));
     long id =
         json.readTree(
                 mvc.perform(
@@ -75,24 +82,27 @@ class WompiWebhookTest {
     String checksum = sha256(txId + status + centavos + TIMESTAMP + secreto);
     return json.writeValueAsString(
         Map.of(
-            "event", "transaction.updated",
+            "event",
+            "transaction.updated",
             "data",
+            Map.of(
+                "transaction",
                 Map.of(
-                    "transaction",
-                    Map.of(
-                        "id", txId,
-                        "reference", referencia,
-                        "status", status,
-                        "amount_in_cents", centavos,
-                        "currency", "COP")),
-            "environment", "test",
+                    "id", txId,
+                    "reference", referencia,
+                    "status", status,
+                    "amount_in_cents", centavos,
+                    "currency", "COP")),
+            "environment",
+            "test",
             "signature",
-                Map.of(
-                    "properties",
-                    List.of("transaction.id", "transaction.status", "transaction.amount_in_cents"),
-                    "checksum",
-                    checksum.toUpperCase()),
-            "timestamp", TIMESTAMP));
+            Map.of(
+                "properties",
+                List.of("transaction.id", "transaction.status", "transaction.amount_in_cents"),
+                "checksum",
+                checksum.toUpperCase()),
+            "timestamp",
+            TIMESTAMP));
   }
 
   private static String sha256(String texto) throws Exception {
@@ -104,7 +114,8 @@ class WompiWebhookTest {
   private String estadoPago(String token, long reservaId) throws Exception {
     return json.readTree(
             mvc.perform(
-                    get("/api/pagos/reserva/" + reservaId).header("Authorization", "Bearer " + token))
+                    get("/api/pagos/reserva/" + reservaId)
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -114,7 +125,8 @@ class WompiWebhookTest {
         .asText();
   }
 
-  private org.springframework.test.web.servlet.ResultActions enviar(String cuerpo) throws Exception {
+  private org.springframework.test.web.servlet.ResultActions enviar(String cuerpo)
+      throws Exception {
     return mvc.perform(
         post("/api/wompi/webhook").contentType(MediaType.APPLICATION_JSON).content(cuerpo));
   }
@@ -123,7 +135,7 @@ class WompiWebhookTest {
   void eventoAprobadoConFirmaValidaMarcaLaReservaPagada() throws Exception {
     Object[] p = pagoIniciado();
     String res =
-        enviar(evento((String) p[2], "APPROVED", 6_000_000, secretoEventos))
+        enviar(evento((String) p[2], "APPROVED", 4_500_000, secretoEventos))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
@@ -138,7 +150,7 @@ class WompiWebhookTest {
     Object[] p = pagoIniciado();
     JsonNode r =
         json.readTree(
-            enviar(evento((String) p[2], "DECLINED", 6_000_000, secretoEventos))
+            enviar(evento((String) p[2], "DECLINED", 4_500_000, secretoEventos))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -150,7 +162,7 @@ class WompiWebhookTest {
   @Test
   void firmaFalsaResponde401YNoTocaElPago() throws Exception {
     Object[] p = pagoIniciado();
-    enviar(evento((String) p[2], "APPROVED", 6_000_000, "otro-secreto"))
+    enviar(evento((String) p[2], "APPROVED", 4_500_000, "otro-secreto"))
         .andExpect(status().isUnauthorized());
     assertThat(estadoPago((String) p[0], (long) p[1])).isEqualTo("PENDIENTE");
   }
@@ -158,15 +170,14 @@ class WompiWebhookTest {
   @Test
   void montoDistintoNoApruebaElPago() throws Exception {
     Object[] p = pagoIniciado();
-    enviar(evento((String) p[2], "APPROVED", 100, secretoEventos))
-        .andExpect(status().isOk());
+    enviar(evento((String) p[2], "APPROVED", 100, secretoEventos)).andExpect(status().isOk());
     assertThat(estadoPago((String) p[0], (long) p[1])).isEqualTo("PENDIENTE");
   }
 
   @Test
   void referenciaAjenaSeIgnoraCon200() throws Exception {
     String res =
-        enviar(evento("OTRA-REFERENCIA", "APPROVED", 6_000_000, secretoEventos))
+        enviar(evento("OTRA-REFERENCIA", "APPROVED", 4_500_000, secretoEventos))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()

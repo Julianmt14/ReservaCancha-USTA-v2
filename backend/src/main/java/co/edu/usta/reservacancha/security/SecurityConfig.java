@@ -43,6 +43,9 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/canchas/**", "/api/disponibilidad/**")
                     .permitAll()
+                    // HU-13: el jugador reserva sin cuenta, solo con nombre y celular
+                    .requestMatchers(HttpMethod.POST, "/api/reservas/rapida")
+                    .permitAll()
                     .requestMatchers("/api/admin/**")
                     .hasAnyRole("ADMIN", "PROPIETARIO")
                     .anyRequest()

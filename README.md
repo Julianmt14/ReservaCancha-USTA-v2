@@ -82,16 +82,22 @@ hay que abrir la página unos minutos antes.
 | POST / PUT | `/api/canchas` | ADMIN, PROPIETARIO | crear / editar (la baja es `activa=false`) |
 | GET | `/api/horarios/cancha/{id}` | JWT | horarios activos de la cancha |
 | POST / PUT / DELETE | `/api/horarios` | ADMIN, PROPIETARIO | crear / editar / dar de baja |
-| GET | `/api/disponibilidad?canchaId=&fecha=` | público | ocupadas + libres 06:00-22:00 (RNF-01 < 2,0 s) |
+| GET | `/api/disponibilidad?canchaId=&fecha=` | público | ocupadas + libres dentro del horario de la cancha (RNF-01 < 2,0 s) |
 | POST | `/api/reservas` | JWT | crear (valida horario y traslape → 409) |
+| POST | `/api/reservas/rapida` | público | HU-13: reserva sin cuenta con nombre y celular; devuelve la reserva, la sesión del jugador y el WhatsApp del complejo |
 | GET | `/api/reservas/mias` | JWT | mis reservas |
 | GET | `/api/reservas/cancha/{id}` | JWT | ocupación desde hoy; el personal ve además quién reservó |
 | POST | `/api/reservas/{id}/cancelar` | dueño, ADMIN, PROPIETARIO | cancelar |
-| POST | `/api/pagos/iniciar/{reservaId}` | dueño, ADMIN, PROPIETARIO | referencia y firma de integridad Wompi |
+| POST | `/api/pagos/iniciar/{reservaId}` | dueño, ADMIN, PROPIETARIO | HU-14: cobra solo el abono de la cancha; si la cancha no pide abono → 400 |
 | POST | `/api/pagos/confirmar/{reservaId}?transactionId=` | dueño, ADMIN, PROPIETARIO | confirma consultando la transacción a Wompi |
 | GET | `/api/pagos/reserva/{reservaId}` | dueño, ADMIN, PROPIETARIO | pagos de la reserva |
 | POST | `/api/wompi/webhook` | firma del evento | evento `transaction.updated` de Wompi |
 | GET | `/api/admin/resumen`, `/reservas`, `/pagos` | ADMIN, PROPIETARIO | consultas administrativas |
+
+**Reglas de reserva (HU-14):** solo 1 o 2 horas, siempre en punto y dentro del horario de la cancha (las canchas de
+Mónaco abren de 2:00 a 10:00 p. m.). Si varias personas piden la misma hora a la vez, la cancha se bloquea mientras
+se revisa cada reserva: solo una la consigue y las demás reciben 409. El botón «Confirmar por WhatsApp» aparece cuando
+se define `WHATSAPP_NUMERO` (solo dígitos, con el 57) en el backend.
 
 ## Wompi sandbox (10 flujos antes de semana 15)
 

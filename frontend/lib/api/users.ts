@@ -7,20 +7,18 @@ export interface RegisterRequest {
   password: string
 }
 
-type RegistrationRole = 'JUGADOR' | 'PROPIETARIO'
-
-// El backend v1.0 no guarda telefono: el registro envia nombre, correo, clave y rol.
-function register(data: RegisterRequest, rol: RegistrationRole) {
+/**
+ * Registro público: solo crea jugadores (TEC-05). El backend responde 403 a cualquier otro rol; las
+ * cuentas del personal las crea el administrador en «Empleados». El backend no guarda el teléfono.
+ */
+export function registerPlayer(data: RegisterRequest) {
   return apiFetch('/api/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ nombre: data.fullName, email: data.email, password: data.password, rol }),
+    body: JSON.stringify({
+      nombre: data.fullName,
+      email: data.email,
+      password: data.password,
+      rol: 'JUGADOR',
+    }),
   })
-}
-
-export function registerPlayer(data: RegisterRequest) {
-  return register(data, 'JUGADOR')
-}
-
-export function registerOwner(data: RegisterRequest) {
-  return register(data, 'PROPIETARIO')
 }

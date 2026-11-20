@@ -55,7 +55,7 @@ export default function LoginPage() {
             ReservaCancha
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>
-            Accede a tu panel de administración
+            Ingreso del personal de Canchas Mónaco
           </p>
         </div>
 
@@ -138,7 +138,7 @@ export default function LoginPage() {
           </button>
 
           <Link
-            href="/registro"
+            href="/reservar"
             className="w-full rounded-lg py-2.5 text-sm font-semibold text-center transition-colors block"
             style={{
               background: 'var(--bg-2)',
@@ -149,7 +149,7 @@ export default function LoginPage() {
             onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--line-2)')}
             onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--line)')}
           >
-            Crear cuenta
+            ¿Vas a reservar? No necesitas cuenta
           </Link>
         </form>
       </div>

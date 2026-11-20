@@ -4,7 +4,6 @@ import co.edu.usta.reservacancha.cancha.Cancha;
 import co.edu.usta.reservacancha.cancha.CanchaRepository;
 import co.edu.usta.reservacancha.horario.Horario;
 import co.edu.usta.reservacancha.horario.HorarioRepository;
-import co.edu.usta.reservacancha.user.Role;
 import co.edu.usta.reservacancha.user.Usuario;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
@@ -36,14 +35,24 @@ public class ReservaService {
     if (!fin.isAfter(inicio))
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST, "horaFin debe ser mayor a horaInicio");
+    // Se reserva por horas completas: 1 o 2 horas, siempre en punto
+    if (!enPunto(inicio) || !enPunto(fin)) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Las horas deben ser en punto");
+    }
+    long duracion = Duration.between(inicio, fin).toMinutes();
+    if (duracion != 60 && duracion != 120) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Solo se puede reservar 1 o 2 horas");
+    }
     if (fecha.isBefore(LocalDate.now())
         || (fecha.isEqual(LocalDate.now()) && !inicio.isAfter(LocalTime.now()))) {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST, "No se puede reservar en un horario que ya paso");
     }
+    // Con la cancha bloqueada, dos personas que piden la misma hora a la vez no quedan las dos
     Cancha cancha =
         canchas
-            .findById(canchaId)
+            .bloquearParaReservar(canchaId)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cancha no existe"));
     if (!cancha.isActiva())
@@ -84,6 +93,10 @@ public class ReservaService {
     return reservas.save(r);
   }
 
+  private static boolean enPunto(LocalTime t) {
+    return t.getMinute() == 0 && t.getSecond() == 0 && t.getNano() == 0;
+  }
+
   @Transactional
   public Reserva cancelar(Long id, Usuario quien) {
     Reserva r =
@@ -92,8 +105,10 @@ public class ReservaService {
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no existe"));
     boolean dueño = r.getUsuario().getId().equals(quien.getId());
-    boolean admin = quien.getRol() == Role.ADMIN || quien.getRol() == Role.PROPIETARIO;
-    if (!dueño && !admin) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sin permiso");
+    // El personal (también el empleado) cancela reservas de otros, por ejemplo si llaman por
+    // teléfono
+    boolean personal = quien.getRol().esPersonal();
+    if (!dueño && !personal) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sin permiso");
     r.setEstado(EstadoReserva.CANCELADA);
     return reservas.save(r);
   }

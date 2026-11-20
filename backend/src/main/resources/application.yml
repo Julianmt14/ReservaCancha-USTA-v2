@@ -1,5 +1,6 @@
 server:
-  port: 8080
+  # Render y otros servicios entregan el puerto en PORT
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -24,8 +25,15 @@ spring:
       mode: always
 
 app:
+  admin:
+    # admin123 es solo para desarrollo; en la dirección pública se define ADMIN_PASSWORD
+    password: ${ADMIN_PASSWORD:admin123}
   cors:
     origins: ${CORS_ORIGINS:http://localhost:3000}
+  # WhatsApp del complejo para el botón «Confirmar por WhatsApp» (solo dígitos, con el 57). Va como
+  # variable de entorno, no en el repositorio; vacío = no se muestra el botón.
+  whatsapp:
+    numero: ${WHATSAPP_NUMERO:}
   jwt:
     secret: ${JWT_SECRET:cGFyYS1kZXYtbXV5LXNlY3JldG8tbXV5LWxhcmdvLXJlc2VydmFjYW5jaGEtY29sb21iaWE=}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}

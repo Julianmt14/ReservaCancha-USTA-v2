@@ -10,6 +10,8 @@ export interface CourtResponse {
   address: string
   description: string | null
   pricePerHour: number
+  /** Abono que se paga en línea al reservar (0 = todo en la cancha). */
+  depositPercent: number
   photoUrl: string | null
   businessId: number
   businessName: string
@@ -24,6 +26,7 @@ export interface CourtRequest {
   sportType: SportType
   description?: string
   pricePerHour: number
+  depositPercent?: number
 }
 
 export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
@@ -59,6 +62,7 @@ interface CanchaDto {
   superficie: string | null
   ubicacion: string | null
   precioHora: number
+  porcentajeAbono?: number | null
   activa: boolean
 }
 
@@ -93,6 +97,7 @@ function toCourt(c: CanchaDto): CourtResponse {
     address: c.ubicacion ?? ESTABLISHMENT.address,
     description: c.tipo,
     pricePerHour: Number(c.precioHora),
+    depositPercent: c.porcentajeAbono ?? 100,
     photoUrl: null,
     businessId: ESTABLISHMENT.id,
     businessName: ESTABLISHMENT.name,
@@ -123,6 +128,7 @@ function toCanchaBody(data: CourtRequest, current?: CanchaDto) {
     superficie: current?.superficie ?? null,
     ubicacion: current?.ubicacion ?? ESTABLISHMENT.address,
     precioHora: data.pricePerHour,
+    porcentajeAbono: data.depositPercent ?? current?.porcentajeAbono ?? null,
     activa: current?.activa ?? true,
   }
 }

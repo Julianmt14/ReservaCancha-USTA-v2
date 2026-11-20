@@ -7,6 +7,8 @@ import co.edu.usta.reservacancha.user.Role;
 import co.edu.usta.reservacancha.user.Usuario;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,6 +19,7 @@ import java.time.Duration;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -52,7 +55,11 @@ public class WompiService {
     this.currency = currency;
   }
 
-  /** Crea el pago PENDIENTE y devuelve los datos para el Widget/Checkout de Wompi (sandbox). */
+  /**
+   * Crea el pago PENDIENTE del abono y devuelve los datos para el Widget/Checkout de Wompi
+   * (sandbox). El abono es el porcentaje de la cancha sobre el valor total; si la cancha no pide
+   * abono (0 %), no hay nada que pagar en línea.
+   */
   public Map<String, Object> iniciarPago(Long reservaId, Usuario quien) {
     Reserva r = reservaAutorizada(reservaId, quien);
     if (r.getEstado() == EstadoReserva.CANCELADA) {
@@ -61,25 +68,39 @@ public class WompiService {
     if (r.getEstado() != EstadoReserva.PENDIENTE) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "La reserva ya fue pagada");
     }
+    BigDecimal abono = abono(r);
     String referencia = "RC-" + r.getId() + "-" + System.currentTimeMillis();
-    long valorCentavos = r.getValorTotal().multiply(java.math.BigDecimal.valueOf(100)).longValue();
+    long valorCentavos = abono.multiply(BigDecimal.valueOf(100)).longValue();
     String firma = firma(referencia, valorCentavos, currency);
 
     Pago p = new Pago();
     p.setReserva(r);
-    p.setValor(r.getValorTotal());
+    p.setValor(abono);
     p.setMoneda(currency);
     p.setReferencia(referencia);
     p.setEstado(EstadoPago.PENDIENTE);
     pagos.save(p);
 
     return Map.of(
+        "valor", abono,
         "referencia", referencia,
         "valorCentavos", valorCentavos,
         "moneda", currency,
         "firmaIntegridad", firma,
         "llavePublica", publicKey,
         "reservaId", r.getId());
+  }
+
+  /** Valor del abono: porcentaje de la cancha sobre el valor total, redondeado a pesos. */
+  private static BigDecimal abono(Reserva r) {
+    int porcentaje = r.getCancha().abonoEnLinea();
+    if (porcentaje <= 0) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Esta cancha no pide abono: se paga completo en la cancha");
+    }
+    return r.getValorTotal()
+        .multiply(BigDecimal.valueOf(porcentaje))
+        .divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP);
   }
 
   /** Pagos de una reserva; solo su dueño o el personal del establecimiento. */
@@ -110,6 +131,21 @@ public class WompiService {
           HttpStatus.BAD_REQUEST, "El monto de la transaccion no coincide");
     }
     return webhook(referencia, transactionId, tx.path("status").asText("PENDING"));
+  }
+
+  /**
+   * Evento firmado de Wompi. Vacio si la referencia no es de esta aplicacion o si el monto no
+   * coincide con el del pago registrado.
+   */
+  public Optional<Pago> evento(
+      String referencia, String transactionId, String status, long valorCentavos) {
+    return pagos
+        .findByReferencia(referencia)
+        .filter(
+            p ->
+                p.getValor().multiply(java.math.BigDecimal.valueOf(100)).longValue()
+                    == valorCentavos)
+        .map(p -> webhook(referencia, transactionId, status));
   }
 
   /** Webhook de Wompi: actualiza pago y marca reserva PAGADA/APROBADA. */

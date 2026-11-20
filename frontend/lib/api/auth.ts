@@ -12,27 +12,31 @@ export interface AuthResponse {
   userId: number
   email: string
   fullName: string
-  role: 'JUGADOR' | 'ADMIN_CANCHA' | 'ORGANIZADOR' | 'SUPER_ADMIN'
+  role: 'JUGADOR' | 'EMPLEADO' | 'ADMIN_CANCHA' | 'ORGANIZADOR' | 'SUPER_ADMIN'
 }
 
 /** Respuesta de POST /api/auth/login del backend. */
 interface LoginDto {
   token: string
   email: string
-  rol: 'ADMIN' | 'JUGADOR' | 'PROPIETARIO'
+  rol: 'ADMIN' | 'JUGADOR' | 'PROPIETARIO' | 'EMPLEADO'
   id: number
   nombre: string
 }
 
 const DEFAULT_EXPIRATION_MS = 24 * 60 * 60 * 1000
 
-/** Administrador y propietario comparten el panel de gestion; el jugador ve la vista de reservas. */
+/**
+ * Administrador y propietario comparten el panel de gestion; el empleado solo atiende reservas
+ * (HU-15) y el jugador ve su vista de reservas.
+ */
 function toRole(rol: LoginDto['rol']): AuthResponse['role'] {
-  return rol === 'JUGADOR' ? 'JUGADOR' : 'ADMIN_CANCHA'
+  if (rol === 'JUGADOR' || rol === 'EMPLEADO') return rol
+  return 'ADMIN_CANCHA'
 }
 
 /** Milisegundos que le quedan al token segun su claim `exp`; si no se puede leer, 24 h. */
-function remainingMs(token: string): number {
+export function remainingMs(token: string): number {
   try {
     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
     if (typeof payload.exp === 'number') return Math.max(payload.exp * 1000 - Date.now(), 0)
@@ -82,6 +86,8 @@ export function clearSession(): void {
 
 export function getStoredUser(): AuthResponse | null {
   if (typeof window === 'undefined') return null
+  // Si la cookie del token ya venció, el perfil guardado no sirve
+  if (!/(?:^|;\s*)token=[^;]+/.test(document.cookie)) return null
   const raw = localStorage.getItem('user')
   if (!raw) return null
   try {

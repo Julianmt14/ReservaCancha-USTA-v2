@@ -1,0 +1,2 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1795140541345,135770,0 · Primera petición (servidor dormido),Non HTTP response code: java.net.SocketTimeoutException,Non HTTP response message: Read timed out,Preparación 1-1,text,false,,3184,0,1,1,https://reservacancha-api.onrender.com/api/canchas,0,0,449

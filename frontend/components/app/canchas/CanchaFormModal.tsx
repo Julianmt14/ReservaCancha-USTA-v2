@@ -25,9 +25,16 @@ interface FormState {
   sportType: SportType
   description: string
   pricePerHour: string
+  depositPercent: string
 }
 
-const EMPTY: FormState = { name: '', sportType: 'FUTBOL', description: '', pricePerHour: '' }
+const EMPTY: FormState = {
+  name: '',
+  sportType: 'FUTBOL',
+  description: '',
+  pricePerHour: '',
+  depositPercent: '50',
+}
 
 export default function CanchaFormModal({ open, onClose, onSaved, editing }: Props) {
   const { activeBusiness } = useBusiness()
@@ -45,6 +52,7 @@ export default function CanchaFormModal({ open, onClose, onSaved, editing }: Pro
             sportType: editing.sportType,
             description: editing.description ?? '',
             pricePerHour: String(editing.pricePerHour),
+            depositPercent: String(editing.depositPercent),
           }
         : EMPTY
     )
@@ -80,6 +88,7 @@ export default function CanchaFormModal({ open, onClose, onSaved, editing }: Pro
         sportType: form.sportType,
         description: form.description.trim() || undefined,
         pricePerHour: price,
+        depositPercent: Math.min(100, Math.max(0, Math.round(Number(form.depositPercent) || 0))),
       }
       const saved = editing ? await updateCourt(editing.id, payload) : await createCourt(payload)
       onSaved(saved)
@@ -128,6 +137,19 @@ export default function CanchaFormModal({ open, onClose, onSaved, editing }: Pro
                 value={form.pricePerHour}
                 onChange={set('pricePerHour')}
                 placeholder="50000"
+                required
+              />
+            </FormField>
+
+            <FormField label="Abono en línea (%)">
+              <Input
+                type="number"
+                min="0"
+                max="100"
+                step="5"
+                value={form.depositPercent}
+                onChange={set('depositPercent')}
+                placeholder="50"
                 required
               />
             </FormField>

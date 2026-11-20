@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { homeFor } from './routes'
 import {
   login as apiLogin,
   saveSession,
@@ -15,6 +16,8 @@ interface AuthContextValue {
   user: AuthResponse | null
   isLoading: boolean
   login: (data: LoginRequest) => Promise<void>
+  /** Guarda la sesión que devuelve la reserva sin cuenta (el jugador no pasa por /login). */
+  startSession: (auth: AuthResponse) => void
   logout: () => void
 }
 
@@ -35,18 +38,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const auth = await apiLogin(data)
       saveSession(auth)
       setUser(auth)
-      router.push('/')
+      router.push(homeFor(auth.role))
     },
     [router]
   )
 
+  const startSession = useCallback((auth: AuthResponse) => {
+    saveSession(auth)
+    setUser(auth)
+  }, [])
+
   const logout = useCallback(() => {
+    // El jugador vuelve a la reserva; el personal, al ingreso
+    const destino = user?.role === 'JUGADOR' ? '/reservar' : '/login'
     clearSession()
     setUser(null)
-    router.push('/login')
-  }, [router])
+    router.push(destino)
+  }, [router, user])
 
-  return <AuthContext.Provider value={{ user, isLoading, login, logout }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, isLoading, login, startSession, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth(): AuthContextValue {

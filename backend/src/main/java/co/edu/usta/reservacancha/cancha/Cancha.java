@@ -1,6 +1,7 @@
 package co.edu.usta.reservacancha.cancha;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
@@ -23,6 +24,12 @@ public class Cancha {
 
   @Min(0)
   private BigDecimal precioHora;
+
+  // Abono que se paga en línea al reservar (0 = todo se paga en la cancha). Vacío = 100 %: así
+  // quedan las canchas creadas antes de que existiera el abono.
+  @Min(0)
+  @Max(100)
+  private Integer porcentajeAbono;
 
   private boolean activa = true;
 
@@ -70,6 +77,19 @@ public class Cancha {
 
   public void setPrecioHora(BigDecimal precioHora) {
     this.precioHora = precioHora;
+  }
+
+  public Integer getPorcentajeAbono() {
+    return porcentajeAbono;
+  }
+
+  public void setPorcentajeAbono(Integer porcentajeAbono) {
+    this.porcentajeAbono = porcentajeAbono;
+  }
+
+  /** Porcentaje que se cobra en línea; las canchas sin el dato cobran el valor completo. */
+  public int abonoEnLinea() {
+    return porcentajeAbono == null ? 100 : porcentajeAbono;
   }
 
   public boolean isActiva() {

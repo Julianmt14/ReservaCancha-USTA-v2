@@ -11,6 +11,8 @@ export interface BookingResponse {
   playerId: number
   playerName: string
   playerPhone?: string
+  /** Abono de la cancha que se paga en línea (0 = todo en la cancha; 100 = valor completo). */
+  depositPercent?: number
   startAt: string // ISO 8601 local, sin zona horaria
   endAt: string // ISO 8601 local, sin zona horaria
   status: BookingStatus
@@ -26,8 +28,8 @@ export interface BookingRequest {
 /** Reserva completa, como la devuelven POST /api/reservas, /mias y cancelar. */
 interface ReservaDto {
   id: number
-  usuario: { id: number; nombre: string }
-  cancha: { id: number; nombre: string }
+  usuario: { id: number; nombre: string; celular?: string | null }
+  cancha: { id: number; nombre: string; porcentajeAbono?: number | null }
   fecha: string
   horaInicio: string
   horaFin: string
@@ -45,6 +47,7 @@ interface OcupacionDto {
   estado: string
   usuarioId: number
   jugador?: string
+  celular?: string | null
 }
 
 function toStatus(estado: string): BookingStatus {
@@ -70,6 +73,8 @@ function toBooking(r: ReservaDto): BookingResponse {
     courtName: r.cancha.nombre,
     playerId: r.usuario.id,
     playerName: r.usuario.nombre,
+    playerPhone: r.usuario.celular ?? undefined,
+    depositPercent: r.cancha.porcentajeAbono ?? 100,
     startAt: `${r.fecha}T${r.horaInicio}`,
     endAt: `${r.fecha}T${r.horaFin}`,
     status: toStatus(r.estado),
@@ -97,6 +102,33 @@ export async function createBooking(data: BookingRequest): Promise<BookingRespon
   return toBooking(reserva)
 }
 
+/**
+ * HU-15: el personal reserva por teléfono con el nombre y el celular del jugador. Usa la reserva sin
+ * cuenta y descarta la sesión del jugador que devuelve, para no tocar la del personal.
+ */
+export async function createPhoneBooking(
+  data: BookingRequest & { playerName: string; playerPhone: string }
+): Promise<BookingResponse> {
+  const [fecha, horaInicio] = data.startAt.split('T')
+  const horaFin = data.endAt.split('T')[1]
+  const res = await apiFetch<{ reserva: ReservaDto }>(
+    '/api/reservas/rapida',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        nombre: data.playerName,
+        celular: data.playerPhone,
+        canchaId: data.courtId,
+        fecha,
+        horaInicio,
+        horaFin,
+      }),
+    },
+    null
+  )
+  return toBooking(res.reserva)
+}
+
 export async function getMyBookings(page = 0, size = 10, token?: string): Promise<Page<BookingResponse>> {
   const reservas = await apiFetch<ReservaDto[]>('/api/reservas/mias', {}, token)
   const ordered = reservas.map(toBooking).sort((a, b) => a.startAt.localeCompare(b.startAt))
@@ -120,12 +152,24 @@ export async function getBookingsByCourt(
     courtName: court.name,
     playerId: b.usuarioId,
     playerName: b.jugador ?? 'Reservado',
+    playerPhone: b.celular ?? undefined,
+    // HU-14: el personal ve si falta el abono o si se paga todo en la cancha
+    depositPercent: court.depositPercent,
     startAt: `${b.fecha}T${b.horaInicio}`,
     endAt: `${b.fecha}T${b.horaFin}`,
     status: toStatus(b.estado),
     createdAt: '',
   }))
   return paged(content, page, size)
+}
+
+/** Qué falta pagar según el abono de la cancha (HU-14). Lo ven el jugador y el personal (`personal`). */
+export function pagoEnCancha(b: BookingResponse, personal = false): string | null {
+  const p = b.depositPercent ?? 100
+  if (b.status === 'CANCELLED') return null
+  if (p === 0) return personal ? 'Paga en la cancha' : 'Pagas en la cancha'
+  if (b.status === 'PENDING') return p < 100 ? 'Falta el abono' : 'Falta el pago'
+  return p < 100 ? 'Abono pagado' : null
 }
 
 export async function cancelBooking(id: number): Promise<BookingResponse> {

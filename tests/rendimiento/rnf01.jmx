@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TEC-04 (#16): RNF-01 con JMeter. 20 jugadores a la vez consultan la disponibilidad y sus reservas en la
+     dirección pública. La primera petición (servidor dormido) se mide aparte, en el grupo de preparación.
+     Uso: jmeter -n -t tests/rendimiento/rnf01.jmx -l resultados.jtl -e -o reporte
+     Otro servidor: -JHOST=localhost -JPUERTO=8080 -JPROTOCOLO=http -->
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="RNF-01 · ReservaCancha">
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="HOST" elementType="Argument"><stringProp name="Argument.name">HOST</stringProp><stringProp name="Argument.value">${__P(HOST,reservacancha-api.onrender.com)}</stringProp></elementProp>
+          <elementProp name="PUERTO" elementType="Argument"><stringProp name="Argument.name">PUERTO</stringProp><stringProp name="Argument.value">${__P(PUERTO,443)}</stringProp></elementProp>
+          <elementProp name="PROTOCOLO" elementType="Argument"><stringProp name="Argument.name">PROTOCOLO</stringProp><stringProp name="Argument.value">${__P(PROTOCOLO,https)}</stringProp></elementProp>
+          <elementProp name="HILOS" elementType="Argument"><stringProp name="Argument.name">HILOS</stringProp><stringProp name="Argument.value">${__P(HILOS,20)}</stringProp></elementProp>
+          <elementProp name="VUELTAS" elementType="Argument"><stringProp name="Argument.name">VUELTAS</stringProp><stringProp name="Argument.value">${__P(VUELTAS,10)}</stringProp></elementProp>
+        </collectionProp>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="Servidor">
+        <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+        <stringProp name="HTTPSampler.port">${PUERTO}</stringProp>
+        <stringProp name="HTTPSampler.protocol">${PROTOCOLO}</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout">120000</stringProp>
+        <stringProp name="HTTPSampler.response_timeout">180000</stringProp>
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="JSON">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header"><stringProp name="Header.name">Content-Type</stringProp><stringProp name="Header.value">application/json</stringProp></elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Preparación">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
+          <boolProp name="LoopController.continue_forever">false</boolProp><stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="0 · Primera petición (servidor dormido)">
+          <stringProp name="HTTPSampler.path">/api/canchas</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="0 · Canchas (servidor ya despierto)">
+          <stringProp name="HTTPSampler.path">/api/canchas</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="canchaId">
+            <stringProp name="JSONPostProcessor.referenceNames">canchaId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$[0].id</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="0 · Registrar jugador de prueba">
+          <stringProp name="HTTPSampler.path">/api/auth/register</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{"nombre":"Jugador RNF-01","email":"jmeter-${__time()}@rnf01.test","password":"clave-rnf01","rol":"JUGADOR"}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="token">
+            <stringProp name="JSONPostProcessor.referenceNames">token</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.token</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Compartir con los 20 jugadores">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">props.put('token', vars.get('token')); props.put('canchaId', vars.get('canchaId'))</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="20 jugadores a la vez">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
+          <boolProp name="LoopController.continue_forever">false</boolProp><stringProp name="LoopController.loops">${VUELTAS}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${HILOS}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="1 · Disponibilidad">
+          <stringProp name="HTTPSampler.path">/api/disponibilidad?canchaId=${__P(canchaId)}&amp;fecha=${__timeShift(yyyy-MM-dd,,P1D,,)}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="2 · Mis reservas">
+          <stringProp name="HTTPSampler.path">/api/reservas/mias</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Sesión del jugador">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">Bearer ${__P(token)}</stringProp></elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Menos de 2,0 s (RNF-01)">
+          <stringProp name="DurationAssertion.duration">1999</stringProp>
+        </DurationAssertion>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

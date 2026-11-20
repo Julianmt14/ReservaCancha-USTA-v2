@@ -3,8 +3,10 @@
 Centralizar la gestión de reservas y pagos de canchas deportivas (Acta de Proyecto, Gerencia de Software — USTA Villavicencio, 28-sep-2026).
 
 **Equipo**
-- Julián Mejía: backend, seguridad, API, JWT, roles, Wompi.
-- Miguel Franco: frontend, datos, despliegue, pruebas, integración API.
+- Julián Mejía — *Product Owner* y desarrollador: backend, seguridad, API, JWT, roles, Wompi.
+- Miguel Franco — *Scrum Master* y desarrollador: frontend, datos, despliegue, pruebas, integración API.
+
+Sprints de una semana, alineados con los hitos del acta. Qué le toca a cada rol: [`ESTANDARES.md`](ESTANDARES.md), sección 8.
 
 **Alcance v1.0:** usuarios y roles · canchas y horarios · disponibilidad · crear/consultar reservas · Wompi **sandbox** · consultas admin.
 **Excluye:** app móvil nativa, facturación DIAN, PayPal/Stripe, torneos, SMS, QR.
@@ -48,29 +50,58 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 |---|---|---|
 | `JWT_SECRET` | secreto de desarrollo | **obligatorio cambiarlo en cualquier despliegue** (Base64, 256 bits o más) |
 | `CORS_ORIGINS` | `http://localhost:3000` | orígenes del frontend, separados por coma |
+| `ADMIN_PASSWORD` | `admin123` | clave del administrador semilla; **obligatorio cambiarla en cualquier despliegue** |
 | `WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `WOMPI_INTEGRITY_SECRET` | placeholders sandbox | llaves del comercio en Wompi |
-| `WOMPI_EVENTS_SECRET` | `test_events_XXXX` | secreto compartido que debe enviar el webhook en `X-Webhook-Secret` |
+| `WOMPI_EVENTS_SECRET` | `test_events_XXXX` | secreto de eventos de Wompi: con él se verifica la firma (`signature.checksum`) de cada evento |
+
+## Despliegue
+
+Dirección pública de prueba, en capas gratuitas. Las claves se cargan en cada servicio, nunca en el repositorio.
+
+- Aplicación: https://reservacancha-rho.vercel.app
+- API: https://reservacancha-api.onrender.com
+
+| Parte | Servicio | Configuración |
+|---|---|---|
+| Base de datos | Neon (PostgreSQL 18, región `aws-us-east-1`) | `SPRING_DATASOURCE_URL=jdbc:postgresql://<host>/neondb?sslmode=require` (conexión directa, sin el *pooler*), `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` y `SPRING_DATASOURCE_DRIVER=org.postgresql.Driver` |
+| Backend | Render (Docker, carpeta `backend`, rama `dev`, región Virginia) | Las variables de arriba más `JWT_SECRET`, `ADMIN_PASSWORD`, `CORS_ORIGINS` (la dirección de la aplicación) y las de Wompi |
+| Frontend | Vercel (carpeta `frontend` de la rama `dev`, con `vercel deploy --prod`) | `NEXT_PUBLIC_API_URL` con la dirección de la API, `NEXT_PUBLIC_WOMPI_SANDBOX`, `NEXT_PUBLIC_ESTABLISHMENT_NAME` y `NEXT_PUBLIC_ESTABLISHMENT_ADDRESS` |
+
+Las variables `NEXT_PUBLIC_*` quedan dentro de la página al compilar: si cambian, hay que volver a publicar el frontend.
+
+El backend gratuito se apaga tras 15 minutos sin tráfico y tarda cerca de un minuto en despertar. Antes de una demo
+hay que abrir la página unos minutos antes.
 
 ## API (backend)
 
 | Método | Ruta | Acceso | Descripción |
 |---|---|---|---|
-| POST | `/api/auth/register` | público | registro (`JUGADOR` o `PROPIETARIO`; `ADMIN` se rechaza) |
+| POST | `/api/auth/register` | público | registro de jugadores; cualquier otro rol → 403 (el personal lo crea el administrador) |
 | POST | `/api/auth/login` | público | login → JWT |
 | GET | `/api/canchas` | público | listar activas |
 | POST / PUT | `/api/canchas` | ADMIN, PROPIETARIO | crear / editar (la baja es `activa=false`) |
 | GET | `/api/horarios/cancha/{id}` | JWT | horarios activos de la cancha |
 | POST / PUT / DELETE | `/api/horarios` | ADMIN, PROPIETARIO | crear / editar / dar de baja |
-| GET | `/api/disponibilidad?canchaId=&fecha=` | público | ocupadas + libres 06:00-22:00 (RNF-01 < 2,0 s) |
+| GET | `/api/disponibilidad?canchaId=&fecha=` | público | ocupadas + libres dentro del horario de la cancha (RNF-01 < 2,0 s) |
 | POST | `/api/reservas` | JWT | crear (valida horario y traslape → 409) |
+| POST | `/api/reservas/rapida` | público | HU-13: reserva sin cuenta con nombre y celular; devuelve la reserva, la sesión del jugador y el WhatsApp del complejo |
 | GET | `/api/reservas/mias` | JWT | mis reservas |
-| GET | `/api/reservas/cancha/{id}` | JWT | ocupación desde hoy; el personal ve además quién reservó |
-| POST | `/api/reservas/{id}/cancelar` | dueño, ADMIN, PROPIETARIO | cancelar |
-| POST | `/api/pagos/iniciar/{reservaId}` | dueño, ADMIN, PROPIETARIO | referencia y firma de integridad Wompi |
+| GET | `/api/reservas/cancha/{id}` | JWT | ocupación desde hoy; el personal (también el empleado) ve además quién reservó y su celular |
+| POST | `/api/reservas/{id}/cancelar` | dueño y personal (ADMIN, PROPIETARIO, EMPLEADO) | cancelar |
+| POST | `/api/pagos/iniciar/{reservaId}` | dueño, ADMIN, PROPIETARIO | HU-14: cobra solo el abono de la cancha; si la cancha no pide abono → 400 |
 | POST | `/api/pagos/confirmar/{reservaId}?transactionId=` | dueño, ADMIN, PROPIETARIO | confirma consultando la transacción a Wompi |
 | GET | `/api/pagos/reserva/{reservaId}` | dueño, ADMIN, PROPIETARIO | pagos de la reserva |
-| POST | `/api/wompi/webhook` | secreto compartido | evento de Wompi |
-| GET | `/api/admin/resumen`, `/reservas`, `/pagos` | ADMIN, PROPIETARIO | consultas administrativas |
+| POST | `/api/wompi/webhook` | firma del evento | evento `transaction.updated` de Wompi |
+| GET | `/api/admin/reservas` | ADMIN, PROPIETARIO, EMPLEADO | agenda: quién reservó, su celular y si pagó el abono |
+| GET | `/api/admin/resumen`, `/pagos` | ADMIN, PROPIETARIO | consultas administrativas |
+| GET | `/api/admin/metricas?desde=&hasta=` | ADMIN, PROPIETARIO | HU-15: reservas, canceladas, ingresos, abonos cobrados, ocupación por cancha, reservas por día y por hora (máx. 92 días) |
+| GET / POST | `/api/admin/empleados` | ADMIN, PROPIETARIO | HU-15: lista del personal / crear empleado (correo repetido → 409) |
+| PATCH | `/api/admin/empleados/{id}` | ADMIN, PROPIETARIO | HU-15: `{activo}`; un empleado desactivado no inicia sesión y su token deja de servir |
+
+**Reglas de reserva (HU-14):** solo 1 o 2 horas, siempre en punto y dentro del horario de la cancha (las canchas de
+Mónaco abren de 2:00 a 10:00 p. m.). Si varias personas piden la misma hora a la vez, la cancha se bloquea mientras
+se revisa cada reserva: solo una la consigue y las demás reciben 409. El botón «Confirmar por WhatsApp» aparece cuando
+se define `WHATSAPP_NUMERO` (solo dígitos, con el 57) en el backend.
 
 ## Wompi sandbox (10 flujos antes de semana 15)
 
@@ -78,6 +109,7 @@ Admin semilla (solo desarrollo): `admin@reservacancha.co` / `admin123`.
 2. `POST /api/pagos/iniciar/{id}` → `{referencia, valorCentavos, firmaIntegridad, llavePublica}`.
 3. Widget de checkout de Wompi en el frontend.
 4. `POST /api/pagos/confirmar/{id}?transactionId=...` verifica la transacción con Wompi → reserva `PAGADA`.
+5. En la dirección pública, el webhook queda en `POST <backend>/api/wompi/webhook` y solo acepta eventos firmados con `WOMPI_EVENTS_SECRET`. Esa dirección se registra como URL de eventos en el panel de Wompi (modo de pruebas).
 
 ## Calidad (ISO/IEC 25010)
 

@@ -44,6 +44,8 @@ public class CanchaController {
     c.setSuperficie(in.getSuperficie());
     c.setUbicacion(in.getUbicacion());
     c.setPrecioHora(in.getPrecioHora());
+    // El formulario anterior no manda el abono: si no viene, se conserva el que tenía
+    if (in.getPorcentajeAbono() != null) c.setPorcentajeAbono(in.getPorcentajeAbono());
     c.setActiva(in.isActiva());
     return repo.save(c);
   }

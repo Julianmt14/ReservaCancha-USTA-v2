@@ -32,7 +32,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@reservacancha.co\",\n  \"password\": \"admin123\"\n}"
+              "raw": "{\n  \"email\": \"admin@reservacancha.co\",\n  \"password\": \"{{adminPassword}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -154,7 +154,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const dia = String(1 + Math.floor(Math.random() * 28)).padStart(2, '0');",
-                  "const hora = 6 + Math.floor(Math.random() * 14);",
+                  "const hora = 14 + Math.floor(Math.random() * 8);",
                   "pm.collectionVariables.set('fecha', '2031-03-' + dia);",
                   "pm.collectionVariables.set('horaInicio', String(hora).padStart(2, '0') + ':00:00');",
                   "pm.collectionVariables.set('horaFin', String(hora + 1).padStart(2, '0') + ':00:00');"
@@ -186,7 +186,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"canchaId\": 1,\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"{{horaInicio}}\",\n  \"horaFin\": \"{{horaFin}}\"\n}"
+              "raw": "{\n  \"canchaId\": 2,\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"{{horaInicio}}\",\n  \"horaFin\": \"{{horaFin}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/reservas",
@@ -1321,6 +1321,184 @@
               ]
             }
           }
+        },
+        {
+          "name": "Registro publico con rol PROPIETARIO",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('emailPropietario', 'x' + Date.now() + '@sec01.test');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"registro con rol PROPIETARIO -> 403 (solo se registran jugadores)\", function () {",
+                  "  pm.expect(pm.response.code, 'status recibido').to.eql(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Aspirante\",\n  \"email\": \"{{emailPropietario}}\",\n  \"password\": \"Clave-segura-3\",\n  \"rol\": \"PROPIETARIO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "La cuenta con rol PROPIETARIO no quedo creada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login de la cuenta rechazado', function () {",
+                  "  pm.expect(pm.response.code, 'status recibido').to.be.oneOf([401, 403]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{emailPropietario}}\",\n  \"password\": \"Clave-segura-3\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registro publico con rol EMPLEADO",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('emailEmpleado', 'x' + Date.now() + '@sec01.test');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"registro con rol EMPLEADO -> 403 (solo se registran jugadores)\", function () {",
+                  "  pm.expect(pm.response.code, 'status recibido').to.eql(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Aspirante\",\n  \"email\": \"{{emailEmpleado}}\",\n  \"password\": \"Clave-segura-3\",\n  \"rol\": \"EMPLEADO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "La cuenta con rol EMPLEADO no quedo creada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login de la cuenta rechazado', function () {",
+                  "  pm.expect(pm.response.code, 'status recibido').to.be.oneOf([401, 403]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{emailEmpleado}}\",\n  \"password\": \"Clave-segura-3\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
         }
       ]
     },
@@ -1838,6 +2016,10 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:8080"
+    },
+    {
+      "key": "adminPassword",
+      "value": "admin123"
     }
   ]
 }

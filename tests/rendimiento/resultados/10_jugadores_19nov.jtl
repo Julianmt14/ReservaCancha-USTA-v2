@@ -1,0 +1,204 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1795141964256,715,0 · Primera petición (servidor dormido),200,OK,Preparación 1-1,text,true,,1182,171,1,1,https://reservacancha-api.onrender.com/api/canchas,711,0,395
+1795141964974,391,0 · Canchas (servidor ya despierto),200,OK,Preparación 1-1,text,true,,1182,171,1,1,https://reservacancha-api.onrender.com/api/canchas,391,0,187
+1795141965389,1571,0 · Registrar jugador de prueba,200,OK,Preparación 1-1,text,true,,979,309,1,1,https://reservacancha-api.onrender.com/api/auth/register,1571,0,212
+1795141967405,756,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,755,0,185
+1795141967603,651,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,9,9,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,651,0,173
+1795141967704,854,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,853,0,179
+1795141967903,655,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,654,0,164
+1795141967504,1151,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1150,0,177
+1795141967802,869,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,869,0,194
+1795141968302,653,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,652,0,168
+1795141968161,1003,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1002,0,181
+1795141968103,1156,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1156,0,175
+1795141968255,1006,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1005,0,177
+1795141968672,690,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,690,0,179
+1795141968203,1261,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1261,0,176
+1795141968002,1567,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1566,0,166
+1795141968558,1011,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1010,0,188
+1795141968558,1011,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1011,0,188
+1795141968656,1003,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1002,0,170
+1795141968955,801,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,801,0,181
+1795141969260,605,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,605,0,194
+1795141969164,906,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,905,0,183
+1795141969261,889,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,796,0,184
+1795141969569,684,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,684,0,179
+1795141969363,896,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,896,0,171
+1795141969570,690,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,689,0,180
+1795141969464,897,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,897,0,204
+1795141969660,707,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,707,0,205
+1795141969866,591,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,591,0,174
+1795141969757,700,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,700,0,190
+1795141969570,993,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,992,0,200
+1795141970150,704,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,704,0,168
+1795141970070,788,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,788,0,179
+1795141970260,598,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,598,0,170
+1795141970254,840,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,840,0,171
+1795141970367,727,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,727,0,188
+1795141970362,792,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,792,0,174
+1795141970457,703,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,703,0,189
+1795141970457,800,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,800,0,190
+1795141970859,501,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,501,0,168
+1795141970259,1104,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1104,0,185
+1795141970563,804,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,803,0,186
+1795141970855,702,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,702,0,171
+1795141971094,675,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,675,0,192
+1795141970859,998,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,998,0,175
+1795141971161,897,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,896,0,180
+1795141971367,783,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,686,0,164
+1795141971558,603,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,603,0,171
+1795141971258,1000,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1000,0,170
+1795141971155,1108,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1108,0,187
+1795141971364,993,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,993,0,175
+1795141971360,1005,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1005,0,180
+1795141971858,507,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,507,0,179
+1795141971095,1364,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1364,0,173
+1795141972058,402,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,402,0,169
+1795141971769,992,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,992,0,178
+1795141972264,589,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,589,0,169
+1795141972150,803,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,708,0,174
+1795141972162,802,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,802,0,182
+1795141972258,800,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,800,0,175
+1795141972460,697,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,696,0,169
+1795141972357,905,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,905,0,178
+1795141972366,898,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,897,0,171
+1795141972366,900,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,900,0,179
+1795141972854,498,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,402,0,177
+1795141972461,901,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,900,0,176
+1795141972762,703,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,703,0,189
+1795141972954,604,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,603,0,164
+1795141972964,595,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,595,0,183
+1795141973059,503,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,503,0,176
+1795141973157,701,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,701,0,179
+1795141973264,893,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,893,0,165
+1795141973266,892,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,703,0,176
+1795141973262,992,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,992,0,176
+1795141973560,894,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,803,0,170
+1795141973362,1093,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1092,0,177
+1795141973352,1109,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1109,0,181
+1795141973562,995,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,995,0,175
+1795141973558,1004,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1003,0,165
+1795141973858,705,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,705,0,173
+1795141974158,407,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,406,0,165
+1795141973466,1192,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1192,0,175
+1795141974158,603,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,603,0,172
+1795141974254,602,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,602,0,165
+1795141974454,505,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,504,0,173
+1795141974460,601,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,601,0,171
+1795141974454,609,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,609,0,179
+1795141974564,693,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,693,0,164
+1795141974657,607,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,607,0,181
+1795141974557,983,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,982,0,171
+1795141974563,977,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,977,0,172
+1795141974959,695,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,695,0,172
+1795141974760,896,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,895,0,173
+1795141974561,1095,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1095,0,169
+1795141974856,803,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,803,0,180
+1795141975062,695,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,694,0,174
+1795141975063,704,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,704,0,185
+1795141975257,696,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,696,0,388
+1795141975541,538,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,538,0,210
+1795141975656,504,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,504,0,173
+1795141975540,713,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,713,0,188
+1795141975265,1097,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1097,0,393
+1795141975757,709,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,709,0,207
+1795141975656,905,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,904,0,187
+1795141975655,1115,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1115,0,188
+1795141975954,816,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,816,0,171
+1795141975767,1004,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1003,0,178
+1795141976080,771,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,680,0,173
+1795141975660,1202,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1202,0,186
+1795141976466,588,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,588,0,193
+1795141976363,695,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,695,0,172
+1795141976160,1191,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1190,0,179
+1795141976774,588,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,588,0,176
+1795141976863,505,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,504,0,179
+1795141976254,1209,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1209,0,188
+1795141977054,496,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,496,0,169
+1795141976561,999,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,998,0,186
+1795141976772,789,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,789,0,179
+1795141976771,887,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,887,0,179
+1795141977059,701,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,701,0,165
+1795141976851,1017,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,1017,0,186
+1795141977362,592,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,591,0,169
+1795141977368,591,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,591,0,175
+1795141977352,711,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,711,0,191
+1795141977551,608,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,607,0,173
+1795141977659,500,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,500,0,199
+1795141977464,701,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,701,0,188
+1795141977560,605,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,605,0,197
+1795141977561,700,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,700,0,196
+1795141977868,582,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,486,0,175
+1795141977761,704,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,703,0,202
+1795141977954,607,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,606,0,174
+1795141978166,490,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,490,0,189
+1795141977959,704,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,703,0,201
+1795141978160,595,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,594,0,195
+1795141978064,791,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,791,0,173
+1795141978166,696,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,696,0,197
+1795141978262,693,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,693,0,194
+1795141978452,505,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,505,0,172
+1795141978465,687,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,687,0,172
+1795141978159,999,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,905,0,204
+1795141978562,598,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,598,0,186
+1795141978657,607,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,607,0,182
+1795141978663,688,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,589,0,180
+1795141978863,603,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,603,0,180
+1795141978956,601,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,601,0,163
+1795141978756,803,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,802,0,161
+1795141979153,406,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,406,0,169
+1795141979159,499,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,499,0,173
+1795141979161,501,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,501,0,173
+1795141978856,808,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,807,0,187
+1795141979265,588,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,490,0,167
+1795141979353,500,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,500,0,180
+1795141978957,1101,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,1101,0,174
+1795141979467,692,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,691,0,181
+1795141979559,601,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,601,0,178
+1795141979559,603,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,603,0,183
+1795141979659,699,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,699,0,177
+1795141979853,605,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,605,0,169
+1795141979664,794,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,794,0,169
+1795141979558,998,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,998,0,163
+1795141979662,894,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,894,0,162
+1795141979853,807,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,807,0,177
+1795141980161,499,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,499,0,182
+1795141980159,600,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,600,0,177
+1795141980064,695,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,695,0,184
+1795141980162,691,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,594,0,173
+1795141980557,501,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,500,0,169
+1795141980359,792,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,598,0,187
+1795141980557,606,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-3,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,605,0,181
+1795141980761,506,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,505,0,168
+1795141980458,809,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,808,0,182
+1795141980660,607,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,606,0,166
+1795141980661,607,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-1,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,607,0,182
+1795141980458,902,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,902,0,166
+1795141980760,795,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,795,0,170
+1795141981151,406,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,406,0,209
+1795141980854,703,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,10,10,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,703,0,177
+1795141981163,494,2 · Mis reservas,200,OK,20 jugadores a la vez 1-3,text,true,,661,415,10,10,https://reservacancha-api.onrender.com/api/reservas/mias,493,0,198
+1795141981058,603,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,9,9,https://reservacancha-api.onrender.com/api/reservas/mias,603,0,208
+1795141981269,690,2 · Mis reservas,200,OK,20 jugadores a la vez 1-1,text,true,,661,415,9,9,https://reservacancha-api.onrender.com/api/reservas/mias,690,0,185
+1795141981267,698,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,8,8,https://reservacancha-api.onrender.com/api/reservas/mias,698,0,187
+1795141981267,793,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,8,8,https://reservacancha-api.onrender.com/api/reservas/mias,793,0,187
+1795141981361,701,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,8,8,https://reservacancha-api.onrender.com/api/reservas/mias,700,0,182
+1795141981557,521,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,8,8,https://reservacancha-api.onrender.com/api/reservas/mias,521,0,193
+1795141981557,606,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-9,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,605,0,183
+1795141981267,896,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,8,8,https://reservacancha-api.onrender.com/api/reservas/mias,895,0,169
+1795141981662,704,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-8,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,704,0,192
+1795141981555,811,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,8,8,https://reservacancha-api.onrender.com/api/reservas/mias,811,0,194
+1795141982061,506,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-6,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,506,0,201
+1795141982079,488,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-7,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,488,0,183
+1795141981965,691,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-10,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,690,0,199
+1795141982063,593,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-4,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,592,0,198
+1795141982164,696,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-5,text,true,,985,206,8,8,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,696,0,203
+1795141982367,494,2 · Mis reservas,200,OK,20 jugadores a la vez 1-8,text,true,,661,415,8,8,https://reservacancha-api.onrender.com/api/reservas/mias,494,0,180
+1795141982367,588,1 · Disponibilidad,200,OK,20 jugadores a la vez 1-2,text,true,,985,206,7,7,https://reservacancha-api.onrender.com/api/disponibilidad?canchaId=1&fecha=2026-11-20,588,0,172
+1795141982163,794,2 · Mis reservas,200,OK,20 jugadores a la vez 1-9,text,true,,661,415,7,7,https://reservacancha-api.onrender.com/api/reservas/mias,794,0,204
+1795141982568,494,2 · Mis reservas,200,OK,20 jugadores a la vez 1-6,text,true,,661,415,6,6,https://reservacancha-api.onrender.com/api/reservas/mias,494,0,196
+1795141982567,585,2 · Mis reservas,200,OK,20 jugadores a la vez 1-7,text,true,,661,415,5,5,https://reservacancha-api.onrender.com/api/reservas/mias,585,0,167
+1795141982656,504,2 · Mis reservas,200,OK,20 jugadores a la vez 1-4,text,true,,661,415,4,4,https://reservacancha-api.onrender.com/api/reservas/mias,504,0,187
+1795141982656,604,2 · Mis reservas,200,OK,20 jugadores a la vez 1-10,text,true,,661,415,3,3,https://reservacancha-api.onrender.com/api/reservas/mias,604,0,167
+1795141982956,405,2 · Mis reservas,200,OK,20 jugadores a la vez 1-2,text,true,,661,415,2,2,https://reservacancha-api.onrender.com/api/reservas/mias,405,0,173
+1795141982861,503,2 · Mis reservas,200,OK,20 jugadores a la vez 1-5,text,true,,661,415,1,1,https://reservacancha-api.onrender.com/api/reservas/mias,503,0,178

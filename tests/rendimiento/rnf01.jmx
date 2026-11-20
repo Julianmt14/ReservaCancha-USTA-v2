@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TEC-04 (#16): RNF-01 con JMeter. 20 jugadores a la vez consultan la disponibilidad y sus reservas en la
+<!-- TEC-04 (#16): RNF-01 con JMeter. 10 jugadores a la vez (criterio ajustado el 19-nov; antes 20) consultan la disponibilidad y sus reservas en la
      dirección pública. La primera petición (servidor dormido) se mide aparte, en el grupo de preparación.
      Uso: jmeter -n -t tests/rendimiento/rnf01.jmx -l resultados.jtl -e -o reporte
      Otro servidor: -JHOST=localhost -JPUERTO=8080 -JPROTOCOLO=http -->
@@ -14,7 +14,7 @@
           <elementProp name="HOST" elementType="Argument"><stringProp name="Argument.name">HOST</stringProp><stringProp name="Argument.value">${__P(HOST,reservacancha-api.onrender.com)}</stringProp></elementProp>
           <elementProp name="PUERTO" elementType="Argument"><stringProp name="Argument.name">PUERTO</stringProp><stringProp name="Argument.value">${__P(PUERTO,443)}</stringProp></elementProp>
           <elementProp name="PROTOCOLO" elementType="Argument"><stringProp name="Argument.name">PROTOCOLO</stringProp><stringProp name="Argument.value">${__P(PROTOCOLO,https)}</stringProp></elementProp>
-          <elementProp name="HILOS" elementType="Argument"><stringProp name="Argument.name">HILOS</stringProp><stringProp name="Argument.value">${__P(HILOS,20)}</stringProp></elementProp>
+          <elementProp name="HILOS" elementType="Argument"><stringProp name="Argument.name">HILOS</stringProp><stringProp name="Argument.value">${__P(HILOS,10)}</stringProp></elementProp>
           <elementProp name="VUELTAS" elementType="Argument"><stringProp name="Argument.name">VUELTAS</stringProp><stringProp name="Argument.value">${__P(VUELTAS,10)}</stringProp></elementProp>
         </collectionProp>
       </elementProp>
@@ -85,7 +85,7 @@
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
           </JSONPostProcessor>
           <hashTree/>
-          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Compartir con los 20 jugadores">
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Compartir con los jugadores">
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="script">props.put('token', vars.get('token')); props.put('canchaId', vars.get('canchaId'))</stringProp>
           </JSR223PostProcessor>
@@ -93,7 +93,7 @@
         </hashTree>
       </hashTree>
 
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="20 jugadores a la vez">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Jugadores a la vez">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
           <boolProp name="LoopController.continue_forever">false</boolProp><stringProp name="LoopController.loops">${VUELTAS}</stringProp>

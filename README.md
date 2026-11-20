@@ -76,7 +76,7 @@ hay que abrir la página unos minutos antes.
 
 | Método | Ruta | Acceso | Descripción |
 |---|---|---|---|
-| POST | `/api/auth/register` | público | registro (`JUGADOR` o `PROPIETARIO`; `ADMIN` se rechaza) |
+| POST | `/api/auth/register` | público | registro de jugadores; cualquier otro rol → 403 (el personal lo crea el administrador) |
 | POST | `/api/auth/login` | público | login → JWT |
 | GET | `/api/canchas` | público | listar activas |
 | POST / PUT | `/api/canchas` | ADMIN, PROPIETARIO | crear / editar (la baja es `activa=false`) |
@@ -86,13 +86,17 @@ hay que abrir la página unos minutos antes.
 | POST | `/api/reservas` | JWT | crear (valida horario y traslape → 409) |
 | POST | `/api/reservas/rapida` | público | HU-13: reserva sin cuenta con nombre y celular; devuelve la reserva, la sesión del jugador y el WhatsApp del complejo |
 | GET | `/api/reservas/mias` | JWT | mis reservas |
-| GET | `/api/reservas/cancha/{id}` | JWT | ocupación desde hoy; el personal ve además quién reservó |
-| POST | `/api/reservas/{id}/cancelar` | dueño, ADMIN, PROPIETARIO | cancelar |
+| GET | `/api/reservas/cancha/{id}` | JWT | ocupación desde hoy; el personal (también el empleado) ve además quién reservó y su celular |
+| POST | `/api/reservas/{id}/cancelar` | dueño y personal (ADMIN, PROPIETARIO, EMPLEADO) | cancelar |
 | POST | `/api/pagos/iniciar/{reservaId}` | dueño, ADMIN, PROPIETARIO | HU-14: cobra solo el abono de la cancha; si la cancha no pide abono → 400 |
 | POST | `/api/pagos/confirmar/{reservaId}?transactionId=` | dueño, ADMIN, PROPIETARIO | confirma consultando la transacción a Wompi |
 | GET | `/api/pagos/reserva/{reservaId}` | dueño, ADMIN, PROPIETARIO | pagos de la reserva |
 | POST | `/api/wompi/webhook` | firma del evento | evento `transaction.updated` de Wompi |
-| GET | `/api/admin/resumen`, `/reservas`, `/pagos` | ADMIN, PROPIETARIO | consultas administrativas |
+| GET | `/api/admin/reservas` | ADMIN, PROPIETARIO, EMPLEADO | agenda: quién reservó, su celular y si pagó el abono |
+| GET | `/api/admin/resumen`, `/pagos` | ADMIN, PROPIETARIO | consultas administrativas |
+| GET | `/api/admin/metricas?desde=&hasta=` | ADMIN, PROPIETARIO | HU-15: reservas, canceladas, ingresos, abonos cobrados, ocupación por cancha, reservas por día y por hora (máx. 92 días) |
+| GET / POST | `/api/admin/empleados` | ADMIN, PROPIETARIO | HU-15: lista del personal / crear empleado (correo repetido → 409) |
+| PATCH | `/api/admin/empleados/{id}` | ADMIN, PROPIETARIO | HU-15: `{activo}`; un empleado desactivado no inicia sesión y su token deja de servir |
 
 **Reglas de reserva (HU-14):** solo 1 o 2 horas, siempre en punto y dentro del horario de la cancha (las canchas de
 Mónaco abren de 2:00 a 10:00 p. m.). Si varias personas piden la misma hora a la vez, la cancha se bloquea mientras

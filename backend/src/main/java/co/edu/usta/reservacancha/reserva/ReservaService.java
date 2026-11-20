@@ -4,7 +4,6 @@ import co.edu.usta.reservacancha.cancha.Cancha;
 import co.edu.usta.reservacancha.cancha.CanchaRepository;
 import co.edu.usta.reservacancha.horario.Horario;
 import co.edu.usta.reservacancha.horario.HorarioRepository;
-import co.edu.usta.reservacancha.user.Role;
 import co.edu.usta.reservacancha.user.Usuario;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
@@ -106,8 +105,10 @@ public class ReservaService {
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no existe"));
     boolean dueño = r.getUsuario().getId().equals(quien.getId());
-    boolean admin = quien.getRol() == Role.ADMIN || quien.getRol() == Role.PROPIETARIO;
-    if (!dueño && !admin) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sin permiso");
+    // El personal (también el empleado) cancela reservas de otros, por ejemplo si llaman por
+    // teléfono
+    boolean personal = quien.getRol().esPersonal();
+    if (!dueño && !personal) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sin permiso");
     r.setEstado(EstadoReserva.CANCELADA);
     return reservas.save(r);
   }

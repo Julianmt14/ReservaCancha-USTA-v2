@@ -22,7 +22,7 @@ administrador: `--env-var adminPassword=...` (la misma de `ADMIN_PASSWORD`). Los
 | 1 | Endpoints protegidos sin token | 401/403 |
 | 2 | Token con texto aleatorio, firma falsa o mal formado | 401/403 |
 | 3 | Jugador sobre rutas de administración y gestión | 403 |
-| 4 | Registro público pidiendo rol `ADMIN` | 403 y la cuenta no existe |
+| 4 | Registro público pidiendo rol `ADMIN`, `PROPIETARIO` o `EMPLEADO` | 403 y la cuenta no existe |
 | 5 | Jugador B sobre pagos y reserva del jugador A | 403 |
 | 6 | Webhook de Wompi sin secreto o con secreto incorrecto | 401 |
 | 7 | Respuestas sin hash de contraseña ni nombres de otros jugadores | cuerpo limpio |
@@ -36,5 +36,7 @@ Umbral de aceptación: **0 fallos**.
 - El inicio de sesión desbordaba la pila (`StackOverflowError`) por un `AuthenticationManager` circular.
 - Las respuestas de reservas incluían el hash de contraseña del usuario.
 - El registro público aceptaba `rol: ADMIN`.
+- El registro público aceptaba `rol: PROPIETARIO` y la página de registro ofrecía «Dueño de cancha»: cualquiera
+  entraba al panel de administración (11 de noviembre de 2026). Ahora solo se registran jugadores.
 - Cualquier usuario autenticado podía iniciar o consultar pagos de reservas ajenas.
 - El webhook de Wompi aceptaba cualquier llamada sin autenticar.

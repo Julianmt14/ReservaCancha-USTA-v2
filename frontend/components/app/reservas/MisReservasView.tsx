@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
-import { getMyBookings, cancelBooking, type BookingResponse } from '@/lib/api/bookings'
+import { getMyBookings, cancelBooking, pagoEnCancha, type BookingResponse } from '@/lib/api/bookings'
 import { getCourt, type CourtResponse } from '@/lib/api/courts'
 import ReservaStatusBadge from './ReservaStatusBadge'
 import BookingDetailModal from './BookingDetailModal'
@@ -22,15 +22,6 @@ function formatDate(iso: string) {
 function formatTime(iso: string) {
   const d = new Date(iso)
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-}
-
-/** Qué falta pagar según el abono de la cancha (HU-14). */
-function pagoEnCancha(b: BookingResponse): string | null {
-  const p = b.depositPercent ?? 100
-  if (b.status === 'CANCELLED') return null
-  if (p === 0) return 'Pagas en la cancha'
-  if (b.status === 'PENDING') return p < 100 ? 'Falta el abono' : 'Falta el pago'
-  return p < 100 ? 'Abono pagado' : null
 }
 
 type Filter = 'all' | 'confirmed' | 'pending' | 'canceled'

@@ -8,6 +8,7 @@ import { getCourts, getSchedules, type ScheduleResponse } from '@/lib/api/courts
 import { getBookingsByCourt, type BookingResponse } from '@/lib/api/bookings'
 import StatsGrid from '@/components/app/dashboard/StatsGrid'
 import WeekCalendar from '@/components/app/dashboard/WeekCalendar'
+import MetricasPanel from '@/components/app/dashboard/MetricasPanel'
 import BookingDetailModal from '@/components/app/reservas/BookingDetailModal'
 import {
   IconStatReservas,
@@ -370,6 +371,8 @@ function AdminDashboard() {
       </div>
 
       <StatsGrid stats={stats} />
+
+      <MetricasPanel />
 
       <WeekCalendar
         days={days}

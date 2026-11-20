@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth/context'
+import { homeFor } from '@/lib/auth/routes'
 import { ApiError } from '@/lib/api/client'
 import {
   abonoDe,
@@ -330,7 +331,7 @@ export default function ReservaRapida() {
             </button>
           </>
         ) : user ? (
-          <Link href="/" className="underline" style={{ color: 'var(--text-2)' }}>
+          <Link href={homeFor(user.role)} className="underline" style={{ color: 'var(--text-2)' }}>
             Panel
           </Link>
         ) : (

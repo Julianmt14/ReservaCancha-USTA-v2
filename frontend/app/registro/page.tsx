@@ -3,10 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { registerPlayer, registerOwner } from '@/lib/api/users'
+import { registerPlayer } from '@/lib/api/users'
 import { ApiError } from '@/lib/api/client'
-
-type Role = 'player' | 'owner'
 
 const LOGO = (
   <div
@@ -63,7 +61,6 @@ function Field({
 
 export default function RegistroPage() {
   const router = useRouter()
-  const [role, setRole] = useState<Role>('player')
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -81,8 +78,7 @@ export default function RegistroPage() {
     setError(null)
     setLoading(true)
     try {
-      const fn = role === 'owner' ? registerOwner : registerPlayer
-      await fn({ fullName, email, phone, password })
+      await registerPlayer({ fullName, email, phone, password })
       router.push('/login')
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) {
@@ -113,39 +109,15 @@ export default function RegistroPage() {
             Crear cuenta
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>
-            Elige tu tipo de cuenta para continuar
+            Cuenta de jugador. Para reservar no la necesitas:{' '}
+            <Link href="/reservar" className="font-semibold" style={{ color: 'var(--green)' }}>
+              reserva con tu nombre y tu celular
+            </Link>
+            .
           </p>
-        </div>
-
-        {/* Toggle de rol */}
-        <div className="flex rounded-lg p-1 mb-6" style={{ background: 'var(--bg-2)' }}>
-          {(
-            [
-              { value: 'player', label: 'Jugador', desc: 'Reserva canchas' },
-              { value: 'owner', label: 'Dueño de cancha', desc: 'Administra tu complejo' },
-            ] as { value: Role; label: string; desc: string }[]
-          ).map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => setRole(opt.value)}
-              className="flex-1 rounded-md px-4 py-3 text-left transition-all cursor-pointer"
-              style={{
-                background: role === opt.value ? 'var(--panel-2)' : 'transparent',
-                border: role === opt.value ? '1px solid var(--line-2)' : '1px solid transparent',
-              }}
-            >
-              <div
-                className="text-sm font-semibold"
-                style={{ color: role === opt.value ? 'var(--text)' : 'var(--text-3)' }}
-              >
-                {opt.label}
-              </div>
-              <div className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
-                {opt.desc}
-              </div>
-            </button>
-          ))}
+          <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
+            Las cuentas del personal de la cancha las crea el administrador.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -223,7 +195,7 @@ export default function RegistroPage() {
               if (!loading) e.currentTarget.style.background = 'var(--green)'
             }}
           >
-            {loading ? 'Creando cuenta…' : `Registrarme como ${role === 'owner' ? 'dueño' : 'jugador'}`}
+            {loading ? 'Creando cuenta…' : 'Registrarme como jugador'}
           </button>
         </form>
 

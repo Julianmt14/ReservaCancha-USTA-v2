@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { getCourts, type CourtResponse } from '@/lib/api/courts'
-import { getBookingsByCourt, cancelBooking, type BookingResponse } from '@/lib/api/bookings'
+import { getBookingsByCourt, cancelBooking, pagoEnCancha, type BookingResponse } from '@/lib/api/bookings'
 import { useBusiness } from '@/lib/context/business-context'
+import { useModalContext } from '@/lib/context/modal-context'
 import BookingDetailModal from './BookingDetailModal'
 import CreateReservaModal from './CreateReservaModal'
 import { IconPlus, IconSearch } from '@/components/app/icons'
@@ -308,6 +309,11 @@ function ListadoTab({
                   </td>
                   <td className="px-4 py-3">
                     <StatusBadge status={b.status} />
+                    {pagoEnCancha(b, true) && (
+                      <span className="mt-1 block text-[11px]" style={{ color: 'var(--text-3)' }}>
+                        {pagoEnCancha(b, true)}
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     {(b.status === 'PENDING' || b.status === 'CONFIRMED') && (
@@ -358,8 +364,9 @@ function ListadoTab({
 
 // ─── Agenda tab ───────────────────────────────────────────────────────────────
 
-const HOUR_START = 6
-const HOUR_END = 24
+// Horario de Canchas Mónaco: todas las canchas abren de 2:00 a 10:00 p. m.
+const HOUR_START = 14
+const HOUR_END = 22
 const TOTAL_H = HOUR_END - HOUR_START
 
 function AgendaTab({
@@ -575,6 +582,9 @@ function AgendaTab({
                           <div
                             key={b.id}
                             onClick={() => onDetail(b)}
+                            title={[b.playerName, b.playerPhone, pagoEnCancha(b, true)]
+                              .filter(Boolean)
+                              .join(' · ')}
                             className="absolute left-[3px] right-[3px] rounded-md px-2 py-1 overflow-hidden cursor-pointer"
                             style={{
                               top: `${top}%`,
@@ -598,6 +608,19 @@ function AgendaTab({
                                 {fmtTime(b.startAt)}–{fmtTime(b.endAt)}
                               </div>
                             )}
+                            {b.playerPhone && (
+                              <div
+                                className="text-[9.5px] font-mono truncate"
+                                style={{ color: 'var(--text-2)' }}
+                              >
+                                {b.playerPhone}
+                              </div>
+                            )}
+                            {pagoEnCancha(b, true) && (
+                              <div className="text-[9.5px] truncate" style={{ color: 'var(--text-3)' }}>
+                                {pagoEnCancha(b, true)}
+                              </div>
+                            )}
                           </div>
                         )
                       })}
@@ -617,6 +640,8 @@ function AgendaTab({
 
 export default function AdminReservasLoader() {
   const { activeBusiness } = useBusiness()
+  // Una reserva creada desde la barra superior (por ejemplo, por teléfono) también recarga el listado
+  const { reservasVersion } = useModalContext()
   const [courts, setCourts] = useState<CourtResponse[]>([])
   const [bookings, setBookings] = useState<BookingResponse[]>([])
   const [loading, setLoading] = useState(true)
@@ -649,7 +674,7 @@ export default function AdminReservasLoader() {
 
   useEffect(() => {
     load()
-  }, [activeBusiness?.id])
+  }, [activeBusiness?.id, reservasVersion])
 
   function handleCancelDone(updated: BookingResponse) {
     setBookings((prev) => prev.map((b) => (b.id === updated.id ? updated : b)))

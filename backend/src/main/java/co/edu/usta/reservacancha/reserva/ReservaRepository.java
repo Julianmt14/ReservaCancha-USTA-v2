@@ -26,4 +26,14 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
         AND r.horaInicio < :horaFin AND r.horaFin > :horaInicio
       """)
   boolean existeTraslape(Long canchaId, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin);
+
+  // Disponibilidad (RNF-01): las franjas ocupadas del día en una sola consulta, sin cargar usuario ni cancha
+  @Query(
+      """
+      SELECT new co.edu.usta.reservacancha.reserva.Franja(r.horaInicio, r.horaFin) FROM Reserva r
+      WHERE r.cancha.id = :canchaId AND r.fecha = :fecha
+        AND r.estado <> co.edu.usta.reservacancha.reserva.EstadoReserva.CANCELADA
+      ORDER BY r.horaInicio
+      """)
+  List<Franja> franjasOcupadas(Long canchaId, LocalDate fecha);
 }

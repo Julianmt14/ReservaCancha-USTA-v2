@@ -36,13 +36,11 @@ public class DisponibilidadController {
   public Map<String, Object> disponibilidad(
       @RequestParam Long canchaId,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+    // Una sola consulta: antes se hacía una por cada hora del día y cada reserva cargaba su usuario
+    List<Franja> franjas = reservas.franjasOcupadas(canchaId, fecha);
     var ocupadas =
-        reservas.findByCanchaIdAndFecha(canchaId, fecha).stream()
-            .filter(r -> r.getEstado() != EstadoReserva.CANCELADA)
-            .map(
-                r ->
-                    Map.of(
-                        "inicio", r.getHoraInicio().toString(), "fin", r.getHoraFin().toString()))
+        franjas.stream()
+            .map(f -> Map.of("inicio", f.inicio().toString(), "fin", f.fin().toString()))
             .toList();
 
     List<Horario> delDia =
@@ -52,7 +50,7 @@ public class DisponibilidadController {
       LocalTime ini = LocalTime.of(h, 0);
       LocalTime fin = LocalTime.of(h + 1, 0);
       if (!dentroDeHorario(delDia, ini, fin, h)) continue;
-      if (!reservas.existeTraslape(canchaId, fecha, ini, fin)) {
+      if (franjas.stream().noneMatch(f -> f.seCruzaCon(ini, fin))) {
         libres.add(Map.of("inicio", ini.toString(), "fin", fin.toString()));
       }
     }
